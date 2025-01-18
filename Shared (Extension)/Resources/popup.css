@@ -2,14 +2,183 @@
     color-scheme: light dark;
 }
 
-body {
-    width: 100px;
-    padding: 10px;
+* {
+  -webkit-tap-highlight-color:rgb(0 0 0/0);
+  -webkit-user-select:none;
+  -webkit-touch-callout:none;
+}
 
-    font-family: system-ui;
-    text-align: center;
+html {
+  font: -apple-system-body;
+}
+
+body {
+  width: 400px; /* for iPad Popover */
+  margin: 0;
+  padding: 15px 0;
+  font-size: 94%;
+  background-color: rgb(240 242 242);
+  font-family: system-ui;
+}
+
+.rtl {
+  direction: rtl;
+  text-align: right;
+}
+
+/* COLOR BULLET COMMON */
+.colorBullet {
+  width: 20px;
+  height: 20px;
+  margin: 0 20px;
+
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+header {
+  margin: 0 15px 15px;
+}
+
+header > label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+header > label > strong:after {
+  content: ':';
+  margin:0 1px;
+}
+
+header > label > span#setDefaultColorBullet-MACOS {
+  display: inline-block;
+}
+
+main {
+  min-height: 38px;
+}
+
+main > ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 15px 15px;
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+main > ul > li {
+  min-height: 38px;
+  background-color: rgb(254 255 255);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+main > ul > li.hover {
+  background-color: rgb(210 209 215);
+  cursor: pointer;
+}
+
+main > ul > li:not(:last-child) {
+  margin-bottom: 1px;
+}
+
+main > ul > li > p {
+  width: 100%;
+  margin: 0;
+  text-align: center;
+}
+
+main > ul > li > img {
+  margin: 0 20px;
+  width: auto;
+  height: 18px;
+}
+
+main > ul > li > img:hover {
+  cursor: pointer;
+}
+
+main > ul > li > div {
+  margin: 10px 0px;
+  overflow-wrap: break-word;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  white-space: pre-wrap;
+  flex: 1;
+}
+
+main > ul > li > div:hover {
+  cursor: default;
+}
+
+main > ul > li > span {
+  display: block;
+}
+
+main > ul > li > span.colorLink {
+  width: 18px;
+  height: 18px;
+  margin-left: 15px;
+  background-image: url(./images/icon-share.svg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+}
+
+main > ul > li > span.colorLink:hover {
+  cursor: pointer;
+}
+
+footer {
+  margin: 0 15px 5px;
+}
+
+footer > div {
+  margin: 0 20px;
+  cursor: pointer;
+  color: rgb(70 146 254);
+}
+
+footer > div.hover {
+  opacity: 0.5;
+}
+
+#clearAllMarks {
+  display: none;
+}
+
+/* HIDDEN INPUT COLOR */
+input[type="color"]#dummyColorInput {
+  position: absolute;
+  bottom: 10px;
+  right: 55px;
+  z-index: -99999;
+  width: 0;
+  height: 0;
+  visibility: hidden;
 }
 
 @media (prefers-color-scheme: dark) {
-    /* Dark Mode styles go here. */
+  body {
+    background-color: rgb(35 35 33);
+  }
+
+  main > ul > li {
+    background-color: rgb(44 43 45);
+  }
+
+  main > ul > li.hover {
+    background-color: rgb(58 57 59);
+  }
+  
+  main > ul > li > span.colorLink {
+    background-image: url(./images/icon-share-dark.svg);
+  }
+
 }

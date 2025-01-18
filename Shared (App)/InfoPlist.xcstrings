@@ -1,0 +1,487 @@
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "CFBundleDisplayName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+
+  "en": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "ColorMark"
+    }
+  },
+  "ar": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "علامةاللون"
+    }
+  },
+  "it": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "ColorMark"
+    }
+  },
+  "id": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "TandaWarna"
+    }
+  },
+  "uk": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "КольороваМітка"
+    }
+  },
+  "nl": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "KleurMarkering"
+    }
+  },
+  "ca": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarcaColor"
+    }
+  },
+  "el": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "ΧρωματικήΣήμανση"
+    }
+  },
+  "hr": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "OznakaBoja"
+    }
+  },
+  "sv": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "FärgMarkering"
+    }
+  },
+  "es": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarcaColor"
+    }
+  },
+  "es-mx": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarcaColor"
+    }
+  },
+  "sk": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "FarebneOznacenie"
+    }
+  },
+  "th": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "เครื่องหมายสี"
+    }
+  },
+  "cs": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "BarevneOznaceni"
+    }
+  },
+  "da": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "FarveMærke"
+    }
+  },
+  "de": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "FarbMarkierung"
+    }
+  },
+  "tr": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "RenkIsareti"
+    }
+  },
+  "nb": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "FargeMerking"
+    }
+  },
+  "hu": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "SzinJeloles"
+    }
+  },
+  "hi": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "रंगचिह्न"
+    }
+  },
+  "fi": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "VäriMerkintä"
+    }
+  },
+  "fr": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarqueCouleur"
+    }
+  },
+  "fr-ca": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarqueCouleur"
+    }
+  },
+  "vi": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "DanhDauMau"
+    }
+  },
+  "he": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "סימוןצבע"
+    }
+  },
+  "pl": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "OznaczenieKolorem"
+    }
+  },
+  "pt-br": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarcaCor"
+    }
+  },
+  "pt-pt": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarcaCor"
+    }
+  },
+  "ms": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "TandaWarna"
+    }
+  },
+  "ro": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarcajCuloare"
+    }
+  },
+  "ru": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "ЦветнаяМетка"
+    }
+  },
+  "en-gb": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "ColorMark"
+    }
+  },
+  "en-au": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "ColorMark"
+    }
+  },
+  "en-ca": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "ColorMark"
+    }
+  },
+  "ko-kr": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "색상표시"
+    }
+  },
+  "zh-cn": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "颜色标记"
+    }
+  },
+  "zh-tw": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "顏色標記"
+    }
+  },
+  "ja": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "カラーマーク"
+    }
+  }
+      }
+    },
+    "CFBundleName" : {
+      "extractionState" : "manual",
+      "localizations" : {
+
+  "en": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "ColorMark"
+    }
+  },
+  "ar": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "علامةاللون"
+    }
+  },
+  "it": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "ColorMark"
+    }
+  },
+  "id": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "TandaWarna"
+    }
+  },
+  "uk": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "КольороваМітка"
+    }
+  },
+  "nl": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "KleurMarkering"
+    }
+  },
+  "ca": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarcaColor"
+    }
+  },
+  "el": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "ΧρωματικήΣήμανση"
+    }
+  },
+  "hr": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "OznakaBoja"
+    }
+  },
+  "sv": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "FärgMarkering"
+    }
+  },
+  "es": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarcaColor"
+    }
+  },
+  "es-mx": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarcaColor"
+    }
+  },
+  "sk": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "FarebneOznacenie"
+    }
+  },
+  "th": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "เครื่องหมายสี"
+    }
+  },
+  "cs": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "BarevneOznaceni"
+    }
+  },
+  "da": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "FarveMærke"
+    }
+  },
+  "de": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "FarbMarkierung"
+    }
+  },
+  "tr": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "RenkIsareti"
+    }
+  },
+  "nb": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "FargeMerking"
+    }
+  },
+  "hu": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "SzinJeloles"
+    }
+  },
+  "hi": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "रंगचिह्न"
+    }
+  },
+  "fi": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "VäriMerkintä"
+    }
+  },
+  "fr": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarqueCouleur"
+    }
+  },
+  "fr-ca": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarqueCouleur"
+    }
+  },
+  "vi": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "DanhDauMau"
+    }
+  },
+  "he": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "סימוןצבע"
+    }
+  },
+  "pl": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "OznaczenieKolorem"
+    }
+  },
+  "pt-br": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarcaCor"
+    }
+  },
+  "pt-pt": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarcaCor"
+    }
+  },
+  "ms": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "TandaWarna"
+    }
+  },
+  "ro": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "MarcajCuloare"
+    }
+  },
+  "ru": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "ЦветнаяМетка"
+    }
+  },
+  "en-gb": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "ColorMark"
+    }
+  },
+  "en-au": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "ColorMark"
+    }
+  },
+  "en-ca": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "ColorMark"
+    }
+  },
+  "ko-kr": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "색상표시"
+    }
+  },
+  "zh-cn": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "颜色标记"
+    }
+  },
+  "zh-tw": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "顏色標記"
+    }
+  },
+  "ja": {
+    "stringUnit": {
+      "state": "translated",
+      "value": "カラーマーク"
+    }
+  }
+
+      }
+    }
+  },
+  "version" : "1.0"
+}

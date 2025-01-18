@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "OznakaBoja",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Ovaj dodatak dodaje šarena isticanja bilo kojem tekstu na web stranicama.",
+        "description": "Description of what the extension does."
+    }
+}

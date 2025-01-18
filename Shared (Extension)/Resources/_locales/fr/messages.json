@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "MarqueCouleur",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Cette extension ajoute des surlignages colorés à tout texte sur les sites web.",
+        "description": "Description of what the extension does."
+    }
+}

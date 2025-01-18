@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "MarcajCuloare",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Această extensie adaugă evidențieri colorate la orice text de pe site-uri web.",
+        "description": "Description of what the extension does."
+    }
+}

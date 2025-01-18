@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "DanhDauMau",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Tiện ích mở rộng này thêm đánh dấu màu sắc vào bất kỳ văn bản nào trên trang web.",
+        "description": "Description of what the extension does."
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "TekstKlipHistorik",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Denne udvidelse gemmer kopieret tekst som historik. Op til 10 poster kan gemmes og genbruges.",
+        "description": "Description of what the extension does."
+    }
+}

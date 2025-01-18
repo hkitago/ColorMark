@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "เครื่องหมายสี",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "ส่วนขยายนี้เพิ่มการไฮไลต์สีสันให้กับข้อความใดๆ บนเว็บไซต์",
+        "description": "Description of what the extension does."
+    }
+}

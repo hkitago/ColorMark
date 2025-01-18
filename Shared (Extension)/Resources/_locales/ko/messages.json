@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "색상표시",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "이 확장 프로그램은 웹사이트의 모든 텍스트에 컬러풀한 강조 표시를 추가합니다.",
+        "description": "Description of what the extension does."
+    }
+}

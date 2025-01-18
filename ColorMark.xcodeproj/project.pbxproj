@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		60A0C00E2D0B962B0043D03E /* HighLighter Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 60A0C00D2D0B962B0043D03E /* HighLighter Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		60A0C0182D0B962B0043D03E /* HighLighter Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 60A0C0172D0B962B0043D03E /* HighLighter Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		60A0C00E2D0B962B0043D03E /* ColorMark Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 60A0C00D2D0B962B0043D03E /* ColorMark Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		60A0C0182D0B962B0043D03E /* ColorMark Extension.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = 60A0C0172D0B962B0043D03E /* ColorMark Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -35,7 +35,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				60A0C00E2D0B962B0043D03E /* HighLighter Extension.appex in Embed Foundation Extensions */,
+				60A0C00E2D0B962B0043D03E /* ColorMark Extension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -46,7 +46,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				60A0C0182D0B962B0043D03E /* HighLighter Extension.appex in Embed Foundation Extensions */,
+				60A0C0182D0B962B0043D03E /* ColorMark Extension.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -54,87 +54,91 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		60A0BFEF2D0B962B0043D03E /* HighLighter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HighLighter.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		60A0C0012D0B962B0043D03E /* HighLighter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HighLighter.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		60A0C00D2D0B962B0043D03E /* HighLighter Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "HighLighter Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		60A0C0172D0B962B0043D03E /* HighLighter Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "HighLighter Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		60A0BFEF2D0B962B0043D03E /* ColorMark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColorMark.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		60A0C0012D0B962B0043D03E /* ColorMark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColorMark.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		60A0C00D2D0B962B0043D03E /* ColorMark Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ColorMark Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		60A0C0172D0B962B0043D03E /* ColorMark Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ColorMark Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		60A0C03C2D0B962B0043D03E /* Exceptions for "Shared (App)" folder in "HighLighter (iOS)" target */ = {
+		60A0C03C2D0B962B0043D03E /* Exceptions for "Shared (App)" folder in "ColorMark (iOS)" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"/Localized: Resources/Main.html",
 				Assets.xcassets,
+				InfoPlist.xcstrings,
 				Resources/Icon.png,
 				Resources/Script.js,
 				Resources/Style.css,
 				ViewController.swift,
 			);
-			target = 60A0BFEE2D0B962B0043D03E /* HighLighter (iOS) */;
+			target = 60A0BFEE2D0B962B0043D03E /* ColorMark (iOS) */;
 		};
-		60A0C0402D0B962B0043D03E /* Exceptions for "iOS (Extension)" folder in "HighLighter Extension (iOS)" target */ = {
+		60A0C0402D0B962B0043D03E /* Exceptions for "iOS (Extension)" folder in "ColorMark Extension (iOS)" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 60A0C00C2D0B962B0043D03E /* HighLighter Extension (iOS) */;
+			target = 60A0C00C2D0B962B0043D03E /* ColorMark Extension (iOS) */;
 		};
-		60A0C0452D0B962B0043D03E /* Exceptions for "iOS (App)" folder in "HighLighter (iOS)" target */ = {
+		60A0C0452D0B962B0043D03E /* Exceptions for "iOS (App)" folder in "ColorMark (iOS)" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 60A0BFEE2D0B962B0043D03E /* HighLighter (iOS) */;
+			target = 60A0BFEE2D0B962B0043D03E /* ColorMark (iOS) */;
 		};
-		60A0C0462D0B962B0043D03E /* Exceptions for "Shared (App)" folder in "HighLighter (macOS)" target */ = {
+		60A0C0462D0B962B0043D03E /* Exceptions for "Shared (App)" folder in "ColorMark (macOS)" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				"/Localized: Resources/Main.html",
 				Assets.xcassets,
+				InfoPlist.xcstrings,
 				Resources/Icon.png,
 				Resources/Script.js,
 				Resources/Style.css,
 				ViewController.swift,
 			);
-			target = 60A0C0002D0B962B0043D03E /* HighLighter (macOS) */;
+			target = 60A0C0002D0B962B0043D03E /* ColorMark (macOS) */;
 		};
-		60A0C04A2D0B962B0043D03E /* Exceptions for "macOS (Extension)" folder in "HighLighter Extension (macOS)" target */ = {
+		60A0C04A2D0B962B0043D03E /* Exceptions for "macOS (Extension)" folder in "ColorMark Extension (macOS)" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = 60A0C0162D0B962B0043D03E /* HighLighter Extension (macOS) */;
+			target = 60A0C0162D0B962B0043D03E /* ColorMark Extension (macOS) */;
 		};
-		60A0C04F2D0B962B0043D03E /* Exceptions for "Shared (Extension)" folder in "HighLighter Extension (iOS)" target */ = {
+		60A0C04F2D0B962B0043D03E /* Exceptions for "Shared (Extension)" folder in "ColorMark Extension (iOS)" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/_locales,
 				Resources/background.js,
 				Resources/content.js,
 				Resources/images,
+				Resources/localization.js,
 				Resources/manifest.json,
 				Resources/popup.css,
 				Resources/popup.html,
 				Resources/popup.js,
 				SafariWebExtensionHandler.swift,
 			);
-			target = 60A0C00C2D0B962B0043D03E /* HighLighter Extension (iOS) */;
+			target = 60A0C00C2D0B962B0043D03E /* ColorMark Extension (iOS) */;
 		};
-		60A0C0502D0B962B0043D03E /* Exceptions for "Shared (Extension)" folder in "HighLighter Extension (macOS)" target */ = {
+		60A0C0502D0B962B0043D03E /* Exceptions for "Shared (Extension)" folder in "ColorMark Extension (macOS)" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Resources/_locales,
 				Resources/background.js,
 				Resources/content.js,
 				Resources/images,
+				Resources/localization.js,
 				Resources/manifest.json,
 				Resources/popup.css,
 				Resources/popup.html,
 				Resources/popup.js,
 				SafariWebExtensionHandler.swift,
 			);
-			target = 60A0C0162D0B962B0043D03E /* HighLighter Extension (macOS) */;
+			target = 60A0C0162D0B962B0043D03E /* ColorMark Extension (macOS) */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -142,8 +146,8 @@
 		60A0BFD72D0B96290043D03E /* Shared (App) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				60A0C03C2D0B962B0043D03E /* Exceptions for "Shared (App)" folder in "HighLighter (iOS)" target */,
-				60A0C0462D0B962B0043D03E /* Exceptions for "Shared (App)" folder in "HighLighter (macOS)" target */,
+				60A0C03C2D0B962B0043D03E /* Exceptions for "Shared (App)" folder in "ColorMark (iOS)" target */,
+				60A0C0462D0B962B0043D03E /* Exceptions for "Shared (App)" folder in "ColorMark (macOS)" target */,
 			);
 			path = "Shared (App)";
 			sourceTree = "<group>";
@@ -151,8 +155,8 @@
 		60A0BFE02D0B962B0043D03E /* Shared (Extension) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				60A0C04F2D0B962B0043D03E /* Exceptions for "Shared (Extension)" folder in "HighLighter Extension (iOS)" target */,
-				60A0C0502D0B962B0043D03E /* Exceptions for "Shared (Extension)" folder in "HighLighter Extension (macOS)" target */,
+				60A0C04F2D0B962B0043D03E /* Exceptions for "Shared (Extension)" folder in "ColorMark Extension (iOS)" target */,
+				60A0C0502D0B962B0043D03E /* Exceptions for "Shared (Extension)" folder in "ColorMark Extension (macOS)" target */,
 			);
 			explicitFolders = (
 				Resources/_locales,
@@ -164,7 +168,7 @@
 		60A0BFF12D0B962B0043D03E /* iOS (App) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				60A0C0452D0B962B0043D03E /* Exceptions for "iOS (App)" folder in "HighLighter (iOS)" target */,
+				60A0C0452D0B962B0043D03E /* Exceptions for "iOS (App)" folder in "ColorMark (iOS)" target */,
 			);
 			path = "iOS (App)";
 			sourceTree = "<group>";
@@ -177,7 +181,7 @@
 		60A0C0112D0B962B0043D03E /* iOS (Extension) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				60A0C0402D0B962B0043D03E /* Exceptions for "iOS (Extension)" folder in "HighLighter Extension (iOS)" target */,
+				60A0C0402D0B962B0043D03E /* Exceptions for "iOS (Extension)" folder in "ColorMark Extension (iOS)" target */,
 			);
 			path = "iOS (Extension)";
 			sourceTree = "<group>";
@@ -185,7 +189,7 @@
 		60A0C01B2D0B962B0043D03E /* macOS (Extension) */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
-				60A0C04A2D0B962B0043D03E /* Exceptions for "macOS (Extension)" folder in "HighLighter Extension (macOS)" target */,
+				60A0C04A2D0B962B0043D03E /* Exceptions for "macOS (Extension)" folder in "ColorMark Extension (macOS)" target */,
 			);
 			path = "macOS (Extension)";
 			sourceTree = "<group>";
@@ -240,10 +244,10 @@
 		60A0BFF02D0B962B0043D03E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				60A0BFEF2D0B962B0043D03E /* HighLighter.app */,
-				60A0C0012D0B962B0043D03E /* HighLighter.app */,
-				60A0C00D2D0B962B0043D03E /* HighLighter Extension.appex */,
-				60A0C0172D0B962B0043D03E /* HighLighter Extension.appex */,
+				60A0BFEF2D0B962B0043D03E /* ColorMark.app */,
+				60A0C0012D0B962B0043D03E /* ColorMark.app */,
+				60A0C00D2D0B962B0043D03E /* ColorMark Extension.appex */,
+				60A0C0172D0B962B0043D03E /* ColorMark Extension.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -251,9 +255,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		60A0BFEE2D0B962B0043D03E /* HighLighter (iOS) */ = {
+		60A0BFEE2D0B962B0043D03E /* ColorMark (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 60A0C0422D0B962B0043D03E /* Build configuration list for PBXNativeTarget "HighLighter (iOS)" */;
+			buildConfigurationList = 60A0C0422D0B962B0043D03E /* Build configuration list for PBXNativeTarget "ColorMark (iOS)" */;
 			buildPhases = (
 				60A0BFEB2D0B962B0043D03E /* Sources */,
 				60A0BFEC2D0B962B0043D03E /* Frameworks */,
@@ -268,16 +272,16 @@
 			fileSystemSynchronizedGroups = (
 				60A0BFF12D0B962B0043D03E /* iOS (App) */,
 			);
-			name = "HighLighter (iOS)";
+			name = "ColorMark (iOS)";
 			packageProductDependencies = (
 			);
 			productName = "HighLighter (iOS)";
-			productReference = 60A0BFEF2D0B962B0043D03E /* HighLighter.app */;
+			productReference = 60A0BFEF2D0B962B0043D03E /* ColorMark.app */;
 			productType = "com.apple.product-type.application";
 		};
-		60A0C0002D0B962B0043D03E /* HighLighter (macOS) */ = {
+		60A0C0002D0B962B0043D03E /* ColorMark (macOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 60A0C04C2D0B962B0043D03E /* Build configuration list for PBXNativeTarget "HighLighter (macOS)" */;
+			buildConfigurationList = 60A0C04C2D0B962B0043D03E /* Build configuration list for PBXNativeTarget "ColorMark (macOS)" */;
 			buildPhases = (
 				60A0BFFD2D0B962B0043D03E /* Sources */,
 				60A0BFFE2D0B962B0043D03E /* Frameworks */,
@@ -292,16 +296,16 @@
 			fileSystemSynchronizedGroups = (
 				60A0C0022D0B962B0043D03E /* macOS (App) */,
 			);
-			name = "HighLighter (macOS)";
+			name = "ColorMark (macOS)";
 			packageProductDependencies = (
 			);
 			productName = "HighLighter (macOS)";
-			productReference = 60A0C0012D0B962B0043D03E /* HighLighter.app */;
+			productReference = 60A0C0012D0B962B0043D03E /* ColorMark.app */;
 			productType = "com.apple.product-type.application";
 		};
-		60A0C00C2D0B962B0043D03E /* HighLighter Extension (iOS) */ = {
+		60A0C00C2D0B962B0043D03E /* ColorMark Extension (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 60A0C03D2D0B962B0043D03E /* Build configuration list for PBXNativeTarget "HighLighter Extension (iOS)" */;
+			buildConfigurationList = 60A0C03D2D0B962B0043D03E /* Build configuration list for PBXNativeTarget "ColorMark Extension (iOS)" */;
 			buildPhases = (
 				60A0C0092D0B962B0043D03E /* Sources */,
 				60A0C00A2D0B962B0043D03E /* Frameworks */,
@@ -314,16 +318,16 @@
 			fileSystemSynchronizedGroups = (
 				60A0C0112D0B962B0043D03E /* iOS (Extension) */,
 			);
-			name = "HighLighter Extension (iOS)";
+			name = "ColorMark Extension (iOS)";
 			packageProductDependencies = (
 			);
 			productName = "HighLighter Extension (iOS)";
-			productReference = 60A0C00D2D0B962B0043D03E /* HighLighter Extension.appex */;
+			productReference = 60A0C00D2D0B962B0043D03E /* ColorMark Extension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
-		60A0C0162D0B962B0043D03E /* HighLighter Extension (macOS) */ = {
+		60A0C0162D0B962B0043D03E /* ColorMark Extension (macOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 60A0C0472D0B962B0043D03E /* Build configuration list for PBXNativeTarget "HighLighter Extension (macOS)" */;
+			buildConfigurationList = 60A0C0472D0B962B0043D03E /* Build configuration list for PBXNativeTarget "ColorMark Extension (macOS)" */;
 			buildPhases = (
 				60A0C0132D0B962B0043D03E /* Sources */,
 				60A0C0142D0B962B0043D03E /* Frameworks */,
@@ -336,11 +340,11 @@
 			fileSystemSynchronizedGroups = (
 				60A0C01B2D0B962B0043D03E /* macOS (Extension) */,
 			);
-			name = "HighLighter Extension (macOS)";
+			name = "ColorMark Extension (macOS)";
 			packageProductDependencies = (
 			);
 			productName = "HighLighter Extension (macOS)";
-			productReference = 60A0C0172D0B962B0043D03E /* HighLighter Extension.appex */;
+			productReference = 60A0C0172D0B962B0043D03E /* ColorMark Extension.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -367,7 +371,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 60A0BFD62D0B96290043D03E /* Build configuration list for PBXProject "HighLighter" */;
+			buildConfigurationList = 60A0BFD62D0B96290043D03E /* Build configuration list for PBXProject "ColorMark" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -381,10 +385,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				60A0BFEE2D0B962B0043D03E /* HighLighter (iOS) */,
-				60A0C0002D0B962B0043D03E /* HighLighter (macOS) */,
-				60A0C00C2D0B962B0043D03E /* HighLighter Extension (iOS) */,
-				60A0C0162D0B962B0043D03E /* HighLighter Extension (macOS) */,
+				60A0BFEE2D0B962B0043D03E /* ColorMark (iOS) */,
+				60A0C0002D0B962B0043D03E /* ColorMark (macOS) */,
+				60A0C00C2D0B962B0043D03E /* ColorMark Extension (iOS) */,
+				60A0C0162D0B962B0043D03E /* ColorMark Extension (macOS) */,
 			);
 		};
 /* End PBXProject section */
@@ -454,12 +458,12 @@
 /* Begin PBXTargetDependency section */
 		60A0C0102D0B962B0043D03E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 60A0C00C2D0B962B0043D03E /* HighLighter Extension (iOS) */;
+			target = 60A0C00C2D0B962B0043D03E /* ColorMark Extension (iOS) */;
 			targetProxy = 60A0C00F2D0B962B0043D03E /* PBXContainerItemProxy */;
 		};
 		60A0C01A2D0B962B0043D03E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 60A0C0162D0B962B0043D03E /* HighLighter Extension (macOS) */;
+			target = 60A0C0162D0B962B0043D03E /* ColorMark Extension (macOS) */;
 			targetProxy = 60A0C0192D0B962B0043D03E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -473,9 +477,9 @@
 				DEVELOPMENT_TEAM = R3F5JGKA7W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "HighLighter Extension";
+				INFOPLIST_KEY_CFBundleDisplayName = "ColorMark Extension";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -486,8 +490,8 @@
 					"-framework",
 					SafariServices,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.HighLighter.Extension;
-				PRODUCT_NAME = "HighLighter Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.ColorMark.Extension;
+				PRODUCT_NAME = "ColorMark Extension";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -504,9 +508,9 @@
 				DEVELOPMENT_TEAM = R3F5JGKA7W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (Extension)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "HighLighter Extension";
+				INFOPLIST_KEY_CFBundleDisplayName = "ColorMark Extension";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -517,8 +521,8 @@
 					"-framework",
 					SafariServices,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.HighLighter.Extension;
-				PRODUCT_NAME = "HighLighter Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.ColorMark.Extension;
+				PRODUCT_NAME = "ColorMark Extension";
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -538,13 +542,14 @@
 				DEVELOPMENT_TEAM = R3F5JGKA7W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (App)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = HighLighter;
+				INFOPLIST_KEY_CFBundleDisplayName = ColorMark;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -556,8 +561,8 @@
 					"-framework",
 					WebKit,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.HighLighter;
-				PRODUCT_NAME = HighLighter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.ColorMark;
+				PRODUCT_NAME = ColorMark;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -575,13 +580,14 @@
 				DEVELOPMENT_TEAM = R3F5JGKA7W;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "iOS (App)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = HighLighter;
+				INFOPLIST_KEY_CFBundleDisplayName = ColorMark;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.6;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -593,8 +599,8 @@
 					"-framework",
 					WebKit,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.HighLighter;
-				PRODUCT_NAME = HighLighter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.ColorMark;
+				PRODUCT_NAME = ColorMark;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -606,28 +612,28 @@
 		60A0C0482D0B962B0043D03E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "macOS (Extension)/HighLighter.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "macOS (Extension)/ColorMark.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R3F5JGKA7W;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "HighLighter Extension";
+				INFOPLIST_KEY_CFBundleDisplayName = "ColorMark Extension";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.HighLighter.Extension;
-				PRODUCT_NAME = "HighLighter Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.ColorMark.Extension;
+				PRODUCT_NAME = "ColorMark Extension";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -638,28 +644,28 @@
 		60A0C0492D0B962B0043D03E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				CODE_SIGN_ENTITLEMENTS = "macOS (Extension)/HighLighter.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "macOS (Extension)/ColorMark.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R3F5JGKA7W;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "macOS (Extension)/Info.plist";
-				INFOPLIST_KEY_CFBundleDisplayName = "HighLighter Extension";
+				INFOPLIST_KEY_CFBundleDisplayName = "ColorMark Extension";
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"-framework",
 					SafariServices,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.HighLighter.Extension;
-				PRODUCT_NAME = "HighLighter Extension";
+				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.ColorMark.Extension;
+				PRODUCT_NAME = "ColorMark Extension";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -672,20 +678,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "macOS (App)/HighLighter.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "macOS (App)/ColorMark.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R3F5JGKA7W;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = HighLighter;
+				INFOPLIST_KEY_CFBundleDisplayName = ColorMark;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -693,8 +700,8 @@
 					"-framework",
 					WebKit,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.HighLighter;
-				PRODUCT_NAME = HighLighter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.ColorMark;
+				PRODUCT_NAME = ColorMark;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -706,20 +713,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_ENTITLEMENTS = "macOS (App)/HighLighter.entitlements";
+				CODE_SIGN_ENTITLEMENTS = "macOS (App)/ColorMark.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = R3F5JGKA7W;
 				ENABLE_HARDENED_RUNTIME = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = HighLighter;
+				INFOPLIST_KEY_CFBundleDisplayName = ColorMark;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.14;
+				MACOSX_DEPLOYMENT_TARGET = 11.5;
 				MARKETING_VERSION = 1.0;
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -727,8 +735,8 @@
 					"-framework",
 					WebKit,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.HighLighter;
-				PRODUCT_NAME = HighLighter;
+				PRODUCT_BUNDLE_IDENTIFIER = com.hkitago.ColorMark;
+				PRODUCT_NAME = ColorMark;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -792,6 +800,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
@@ -846,13 +855,14 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_EMIT_LOC_STRINGS = YES;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		60A0BFD62D0B96290043D03E /* Build configuration list for PBXProject "HighLighter" */ = {
+		60A0BFD62D0B96290043D03E /* Build configuration list for PBXProject "ColorMark" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				60A0C0512D0B962B0043D03E /* Debug */,
@@ -861,7 +871,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		60A0C03D2D0B962B0043D03E /* Build configuration list for PBXNativeTarget "HighLighter Extension (iOS)" */ = {
+		60A0C03D2D0B962B0043D03E /* Build configuration list for PBXNativeTarget "ColorMark Extension (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				60A0C03E2D0B962B0043D03E /* Debug */,
@@ -870,7 +880,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		60A0C0422D0B962B0043D03E /* Build configuration list for PBXNativeTarget "HighLighter (iOS)" */ = {
+		60A0C0422D0B962B0043D03E /* Build configuration list for PBXNativeTarget "ColorMark (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				60A0C0432D0B962B0043D03E /* Debug */,
@@ -879,7 +889,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		60A0C0472D0B962B0043D03E /* Build configuration list for PBXNativeTarget "HighLighter Extension (macOS)" */ = {
+		60A0C0472D0B962B0043D03E /* Build configuration list for PBXNativeTarget "ColorMark Extension (macOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				60A0C0482D0B962B0043D03E /* Debug */,
@@ -888,7 +898,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		60A0C04C2D0B962B0043D03E /* Build configuration list for PBXNativeTarget "HighLighter (macOS)" */ = {
+		60A0C04C2D0B962B0043D03E /* Build configuration list for PBXNativeTarget "ColorMark (macOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				60A0C04D2D0B962B0043D03E /* Debug */,

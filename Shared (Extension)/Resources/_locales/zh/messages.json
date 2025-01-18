@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "颜色标记",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "此扩展程序可为网站上的任何文本添加彩色突出显示。",
+        "description": "Description of what the extension does."
+    }
+}

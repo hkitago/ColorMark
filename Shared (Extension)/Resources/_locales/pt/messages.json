@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "MarcaCor",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Esta extensão adiciona destaques coloridos a qualquer texto em sites.",
+        "description": "Description of what the extension does."
+    }
+}

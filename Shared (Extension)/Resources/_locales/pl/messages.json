@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "OznaczenieKolorem",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "To rozszerzenie dodaje kolorowe podświetlenia do dowolnego tekstu na stronach internetowych.",
+        "description": "Description of what the extension does."
+    }
+}

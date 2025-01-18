@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "סימוןצבע",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "תוסף זה מוסיף סימונים צבעוניים לכל טקסט באתרי אינטרנט.",
+        "description": "Description of what the extension does."
+    }
+}

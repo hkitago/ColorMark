@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "ЦветнаяМетка",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Это расширение добавляет цветные выделения к любому тексту на веб-сайтах.",
+        "description": "Description of what the extension does."
+    }
+}

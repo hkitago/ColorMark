@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "रंगचिह्न",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "यह एक्सटेंशन वेबसाइट पर किसी भी टेक्स्ट में रंगीन हाइलाइट जोड़ता है।",
+        "description": "Description of what the extension does."
+    }
+}

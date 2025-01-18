@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "VäriMerkintä",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Tämä laajennus lisää värikkäitä korostuksia mihin tahansa tekstiin verkkosivuilla.",
+        "description": "Description of what the extension does."
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "KleurMarkering",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Deze extensie voegt kleurrijke markeringen toe aan tekst op websites.",
+        "description": "Description of what the extension does."
+    }
+}

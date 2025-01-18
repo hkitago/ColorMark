@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "FärgMarkering",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Detta tillägg lägger till färgglada markeringar till text på webbplatser.",
+        "description": "Description of what the extension does."
+    }
+}

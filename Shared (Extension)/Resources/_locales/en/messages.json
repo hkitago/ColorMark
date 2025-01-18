@@ -1,10 +1,10 @@
 {
     "extension_name": {
-        "message": "HighLighter",
+        "message": "ColorMark",
         "description": "The display name for the extension."
     },
     "extension_description": {
-        "message": "This is HighLighter. You should tell us what your extension does here.",
+        "message": "This extension adds colorful highlights to any text on websites.",
         "description": "Description of what the extension does."
     }
 }

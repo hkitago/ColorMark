@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "ΧρωματικήΣήμανση",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Αυτή η επέκταση προσθέτει χρωματιστές επισημάνσεις σε οποιοδήποτε κείμενο σε ιστοσελίδες.",
+        "description": "Description of what the extension does."
+    }
+}

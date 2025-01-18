@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "FarebneOznacenie",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Toto rozšírenie pridáva farebné zvýraznenia k ľubovoľnému textu na webových stránkach.",
+        "description": "Description of what the extension does."
+    }
+}

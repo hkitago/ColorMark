@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "ColorMark",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Questa estensione aggiunge evidenziazioni colorate a qualsiasi testo sui siti web.",
+        "description": "Description of what the extension does."
+    }
+}

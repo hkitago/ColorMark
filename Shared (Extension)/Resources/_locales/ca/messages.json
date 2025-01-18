@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "MarcaColor",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Aquesta extensió afegeix ressaltats de colors a qualsevol text en llocs web.",
+        "description": "Description of what the extension does."
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "КольороваМітка",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Це розширення додає кольорові виділення до будь-якого тексту на веб-сайтах.",
+        "description": "Description of what the extension does."
+    }
+}

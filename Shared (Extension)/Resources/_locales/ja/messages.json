@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "テキストクリップ履歴",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "このブラウザ拡張機能は、コピーしたテキストを履歴として自動保存します。最大10件まで保存され、必要な時に再利用できます。",
+        "description": "Description of what the extension does."
+    }
+}

@@ -1,0 +1,10 @@
+{
+    "extension_name": {
+        "message": "TandaWarna",
+        "description": "The display name for the extension."
+    },
+    "extension_description": {
+        "message": "Ekstensi ini menambahkan sorotan berwarna ke teks apa pun di situs web.",
+        "description": "Description of what the extension does."
+    }
+}
