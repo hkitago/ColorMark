@@ -58,6 +58,8 @@
 		60A0C0012D0B962B0043D03E /* ColorMark.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ColorMark.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		60A0C00D2D0B962B0043D03E /* ColorMark Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ColorMark Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
 		60A0C0172D0B962B0043D03E /* ColorMark Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "ColorMark Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
+		60A563C72D3B3F9D006A064B /* LICENSE */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
+		60A563C82D3B3F9D006A064B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -231,6 +233,8 @@
 		60A0BFD22D0B96290043D03E = {
 			isa = PBXGroup;
 			children = (
+				60A563C72D3B3F9D006A064B /* LICENSE */,
+				60A563C82D3B3F9D006A064B /* README.md */,
 				60A0BFD72D0B96290043D03E /* Shared (App) */,
 				60A0BFE02D0B962B0043D03E /* Shared (Extension) */,
 				60A0BFF12D0B962B0043D03E /* iOS (App) */,
