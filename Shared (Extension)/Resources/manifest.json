@@ -19,6 +19,7 @@
 
     "content_scripts": [{
         "js": [ "content.js" ],
+        "type": "module",
         "matches": [ "http://*/*", "https://*/*" ]
     }],
 
