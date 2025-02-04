@@ -1,15 +1,5 @@
-import { labelStrings, getCurrentLangCode } from './localization.js';
-const langCode = getCurrentLangCode();
-
-const isMacOS = () => {
-  const isPlatformMac = navigator.platform.toLowerCase().indexOf('mac') !== -1;
-
-  const isUserAgentMac = /Mac/.test(navigator.userAgent) &&
-                         !/iPhone/.test(navigator.userAgent) &&
-                         !/iPad/.test(navigator.userAgent);
-  
-  return (isPlatformMac || isUserAgentMac) && !('ontouchend' in document);
-};
+import { getCurrentLangLabelString, applyRTLSupport } from './localization.js';
+import { isMacOS, saveDefaultColor, getDefaultColor } from './utils.js';
 
 const updateMarkedColor = async (newColor, id, url) => {
   if (!newColor) {
@@ -31,43 +21,8 @@ const updateMarkedColor = async (newColor, id, url) => {
     });
     
     await browser.storage.local.set({ [url]: updatedMarkedTexts });
-    console.log(`Color value for id ${id} updated to ${newColor}`);
   } catch (error) {
-    console.error("Fail to update the marked color to storage:", error);
-  }
-};
-
-const saveDefaultColor = async (newColor) => {
-  if (!newColor) {
-    throw new Error('Color value is required');
-  }
-  
-  try {
-    await browser.storage.local.set({ defaultColor: newColor });
-    return true;
-  } catch (error) {
-    console.error("Fail to save default color to storage:", error);
-    throw error;
-  }
-};
-
-const getDefaultColor = async () => {
-  const DEFAULT_COLOR = '#fffb00';
-  let color = DEFAULT_COLOR;
-  
-  try {
-    const result = await browser.storage.local.get('defaultColor');
-    if (result.defaultColor) {
-      color = result.defaultColor;
-      return color;
-    }
-  } catch (error) {
-    console.error('Fail to retrieve default color from storage:', error);
-  } finally {
-    if (color === DEFAULT_COLOR) {
-      await saveDefaultColor(DEFAULT_COLOR);
-    }
-    return color;
+    console.error('Fail to update the marked color to storage:', error);
   }
 };
 
@@ -75,22 +30,108 @@ const showOnError = (ul, clearAllMarks) => {
   ul.innerHTML = '';
   const li = document.createElement('li');
   const p = document.createElement('p');
-  p.textContent = `${labelStrings[langCode].onError}`;
+  p.textContent = `${getCurrentLangLabelString('onError')}`;
   li.appendChild(p);
   ul.appendChild(li);
   
   clearAllMarks.style.display = 'none';
 };
 
-const buildPopup = async (url, color) => {
+const isBlockElement = (htmlString) => {
+  if (typeof htmlString !== 'string') {
+    return false;
+  }
+  
+  const blockElementRegex = /<(h[1-6]|p|div)\b[^>]*>/i;
+  return blockElementRegex.test(htmlString);
+};
+
+const formatHtmlWithBreaks = (htmlString) => {
+  const container = document.createElement('div');
+  container.innerHTML = htmlString;
+
+  const extractTextWithBreaks = (node) => {
+    let textContent = '';
+
+    for (const child of node.childNodes) {
+      if (child.nodeType === Node.TEXT_NODE) {
+        textContent += child.textContent.trim();
+      } else if (child.nodeType === Node.ELEMENT_NODE) {
+        const tagName = child.tagName.toLowerCase();
+
+        if (isBlockElement(`<${tagName}>`)) {
+          textContent += '\n' + extractTextWithBreaks(child) + '\n';
+        } else {
+          textContent += extractTextWithBreaks(child);
+        }
+      }
+    }
+
+    return textContent;
+  };
+
+  let finalText = extractTextWithBreaks(container);
+  finalText = finalText.replace(/\n\s*\n/g, '\n').trim();
+
+  return finalText.replace(/\n/g, '<br>');
+};
+
+const constructFragmentUrl = (tabUrl, markedText) => {
+  let fragmentParam = `${encodeURIComponent(markedText.text)}`;
+  
+  if (isBlockElement(markedText.html)) {
+    const container = document.createElement('div');
+    container.innerHTML = markedText.html;
+    
+    const extractTextNodes = (node) => {
+      let textNodes = [];
+      
+      for (const child of node.childNodes) {
+        if (child.nodeType === Node.TEXT_NODE) {
+          const trimmedText = child.textContent.trim();
+          if (trimmedText) {
+            textNodes.push(trimmedText);
+          }
+        } else if (child.nodeType === Node.ELEMENT_NODE) {
+          textNodes = textNodes.concat(extractTextNodes(child));
+        }
+      }
+      
+      return textNodes;
+    };
+
+    const textNodes = extractTextNodes(container).filter(text => text.trim() !== '');
+    
+    if (textNodes.length >= 1) {
+      const startText = encodeURIComponent(textNodes[0]);
+      const endText = encodeURIComponent(textNodes[textNodes.length - 1]);
+      fragmentParam = `${startText},${endText}`;
+    }
+  }
+
+  let params = '';
+  if (markedText.isDuplicate || isBlockElement(markedText.html)) {
+    params = (markedText.prefix ? `${encodeURIComponent(markedText.prefix)}-,` : '') +
+             `${fragmentParam}` +
+             (markedText.suffix ? `,-${encodeURIComponent(markedText.suffix)}` : '');
+  } else {
+    params = `${fragmentParam}`;
+  }
+
+  return `${tabUrl}#:~:text=${params}`;
+};
+
+const buildPopup = async (url, color, sortedIds) => {
   if (navigator.userAgent.indexOf('iPhone') > -1) {
     document.body.style.width = 'initial';
   }
 
+  applyRTLSupport();
+  
   /* HEADER */
   let bulletTarget;
 
-  document.getElementById('defaultColorLabel').textContent = `${labelStrings[langCode].defaultColor}`;
+  document.getElementById('defaultColorLabel').textContent = `${getCurrentLangLabelString('defaultColor')}`;
 
   const colorBulletId = `setDefaultColorBullet-${(isMacOS() ? 'MACOS' : 'IOS')}`;
   const defaultColorBullet = document.getElementById(colorBulletId);
@@ -160,23 +201,34 @@ const buildPopup = async (url, color) => {
     defaultColorBullet.addEventListener('change', colorPickerChangeHandler);
   }
   
+  const onMouseOver = (event) => {
+    event.target.closest('li').classList.add('hover');
+  }
+
+  const onMouseOut = (event) => {
+    event.target.closest('li').classList.remove('hover');
+  }
+
   /* MAIN */
   const result = await browser.storage.local.get(url);
   const markedTexts = result[url] || [];
   
+  const sortedMarks = sortedIds.map(id => markedTexts.find(mark => mark.id === id));
+  
   const ul = document.getElementById('colorMarkList');
   const clearAllMarks = document.getElementById('clearAllMarks');
-  
-  if (markedTexts.length === 0) {
+
+  if (sortedMarks.length === 0) {
     showOnError(ul, clearAllMarks);
     return;
   }
-  
-  markedTexts.forEach((markedText) => {
-    console.log(markedText);
+
+  sortedMarks.forEach((markedText) => {
     const li = document.createElement('li');
     li.dataset.id = markedText.id;
-    
+    li.addEventListener('mouseover', onMouseOver);
+    li.addEventListener('mouseout', onMouseOut);
+
     // Btn to delete the item
     const deleteIcon = document.createElement('img');
     deleteIcon.src = './images/icon-minus.svg';
@@ -186,7 +238,7 @@ const buildPopup = async (url, color) => {
       const li = event.target.closest('li');
       const id = li.dataset.id;
       
-      const updatedTexts = markedTexts.filter(item => item.id !== id);
+      const updatedTexts = sortedMarks.filter(item => item.id !== id);
       li.remove();
       
       const ul = document.getElementById('colorMarkList');
@@ -205,11 +257,13 @@ const buildPopup = async (url, color) => {
       }
     });
     
-    // Diplay text content
+    // Display text content
     const div = document.createElement('div');
-    div.textContent = markedText.text;
-    li.appendChild(div);
+    const formattedHtml = isBlockElement(markedText.html) ? formatHtmlWithBreaks(markedText.html) : markedText.text;
+    div.innerHTML = formattedHtml;
 
+    li.appendChild(div);
+    
     // Btn to share the item
     const shareSpan = document.createElement('span');
     shareSpan.classList.add('colorLink');
@@ -218,7 +272,7 @@ const buildPopup = async (url, color) => {
     shareSpan.addEventListener('click', async (event) => {
       try {
         let [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-        const fragmentUrl = `${tab.url}#:~:text=${encodeURIComponent(markedText.text)}`;
+        const fragmentUrl = constructFragmentUrl(tab.url, markedText);
         navigator.share({
           url: fragmentUrl
         });
@@ -246,7 +300,7 @@ const buildPopup = async (url, color) => {
     ul.appendChild(li);
   });
   /* FOOTER */
-  clearAllMarks.textContent = labelStrings[langCode].clearAllMarks;
+  clearAllMarks.textContent = getCurrentLangLabelString('clearAllMarks');
   if (ul.children.length > 1) {
     clearAllMarks.style.display = 'inline-block';
   }
@@ -266,13 +320,6 @@ const buildPopup = async (url, color) => {
 
 };
 
-const generateUUID = () => {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-    const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-};
-
 let isInitialized = false;
 
 const initializePopup = async () => {
@@ -284,8 +331,14 @@ const initializePopup = async () => {
     const defaultColor = await getDefaultColor();
     const tabUrl = tab.url;
   
-    await browser.tabs.sendMessage(tab.id, { type: 'addColorMark', color: defaultColor, id: generateUUID() });
-    await buildPopup(tabUrl, defaultColor);
+    const response = await browser.tabs.sendMessage(tab.id, {
+      type: 'addColorMark',
+      color: defaultColor
+    });
+    
+    const sortedIds = (response && response.sortedIds) ? response.sortedIds : [];
+
+    await buildPopup(tabUrl, defaultColor, sortedIds);
   } catch (error) {
     console.error('Fail to initialize to build the popup:', error);
     isInitialized = false;
