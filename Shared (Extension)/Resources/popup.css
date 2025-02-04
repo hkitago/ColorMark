@@ -76,11 +76,6 @@ main > ul > li {
   justify-content: space-between;
 }
 
-main > ul > li.hover {
-  background-color: rgb(210 209 215);
-  cursor: pointer;
-}
-
 main > ul > li:not(:last-child) {
   margin-bottom: 1px;
 }
@@ -129,9 +124,19 @@ main > ul > li > span.colorLink {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: contain;
+  display: none;
 }
 
-main > ul > li > span.colorLink:hover {
+.rtl main > ul > li > span.colorLink {
+  margin-left: 0px;
+  margin-right: 15px;
+}
+
+main > ul > li.hover > span.colorLink {
+  display: inline-block;
+}
+
+main > ul > li.hover > span.colorLink:hover {
   cursor: pointer;
 }
 
