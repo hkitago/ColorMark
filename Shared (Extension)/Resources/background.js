@@ -1,56 +1,21 @@
-import { labelStrings, getCurrentLangCode } from './localization.js';
-const langCode = getCurrentLangCode();
+import { getCurrentLangLabelString } from './localization.js';
+import { isMacOS, getDefaultColor } from './utils.js';
 
-const isMacOS = () => {
-  const isPlatformMac = navigator.platform.toLowerCase().indexOf('mac') !== -1;
+browser.runtime.onInstalled.addListener(async () => {
+  const tabs = await browser.tabs.query({});
 
-  const isUserAgentMac = /Mac/.test(navigator.userAgent) &&
-                         !/iPhone/.test(navigator.userAgent) &&
-                         !/iPad/.test(navigator.userAgent);
-  
-  return (isPlatformMac || isUserAgentMac) && !('ontouchend' in document);
-};
+  for (const tab of tabs) {
+    if (tab.url.startsWith('http') || tab.url.startsWith('https')) {
+      await browser.tabs.reload(tab.id);
+    }
+  }
+});
 
 // ContextMenu for macOS
 if (isMacOS()) {
-
-  const saveDefaultColor = async (newColor) => {
-    if (!newColor) {
-      throw new Error('Color value is required');
-    }
-    
-    try {
-      await browser.storage.local.set({ defaultColor: newColor });
-      return true;
-    } catch (error) {
-      console.error("Error saving default color to storage:", error);
-      throw error;
-    }
-  };
-
-  const getDefaultColor = async () => {
-    const DEFAULT_COLOR = '#fffb00';
-    let color = DEFAULT_COLOR;
-    
-    try {
-      const result = await browser.storage.local.get('defaultColor');
-      if (result.defaultColor) {
-        color = result.defaultColor;
-        return color;
-      }
-    } catch (error) {
-      console.error('Error retrieving default color from storage:', error);
-    } finally {
-      if (color === DEFAULT_COLOR) {
-        await saveDefaultColor(DEFAULT_COLOR);
-      }
-      return color;
-    }
-  };
-
   browser.contextMenus.create({
     id: 'selectionColorMark',
-    title: `${labelStrings[langCode].contextMenu}`,
+    title: `${getCurrentLangLabelString('contextMenu')}`,
     contexts: ['selection']
   });
 
