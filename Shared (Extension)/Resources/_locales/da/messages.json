@@ -1,10 +1,10 @@
 {
     "extension_name": {
-        "message": "TekstKlipHistorik",
+        "message": "FarveMærke",
         "description": "The display name for the extension."
     },
     "extension_description": {
-        "message": "Denne udvidelse gemmer kopieret tekst som historik. Op til 10 poster kan gemmes og genbruges.",
+        "message": "Denne udvidelse tilføjer farverige markeringer til tekst på hjemmesider.",
         "description": "Description of what the extension does."
     }
 }
