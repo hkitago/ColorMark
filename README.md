@@ -1,6 +1,8 @@
 # ColorMark for Safari Extension
 
-This extension adds colorful highlights to any text on websites.
+This Safari extension lets you highlight any text on web pages with various colors using the built-in system color picker. Highlight key content with ease and share direct links to highlighted sections for precise reference. With the latest OS features, highlighting and sharing text has never been easier, making it simple for others to find and understand important information.
+
+Ideal for educators, students, researchers, and presenters who work with web-based content. Whether you’re preparing study materials, sharing research findings, or creating engaging presentations, this extension helps you organize and communicate ideas effectively.
 
 ## Installation & Uninstallation
 
