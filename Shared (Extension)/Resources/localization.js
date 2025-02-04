@@ -5,7 +5,7 @@
 //  Created by Hiroyuki KITAGO on 2025/01/09.
 //
 
-export const labelStrings = {
+const labelStrings = {
   "en": {
     "contextMenu": "ColorMark",
     "onError": "There are no color marks.",
@@ -309,10 +309,27 @@ export const labelStrings = {
   }
 };
 
-export const getCurrentLangCode = () => {
+export const getCurrentLangLabelString = (key = 'onError') => {
   const langCode = window.navigator.language || 'en';
+  const baseLang = langCode.split('-')[0];
 
-  return labelStrings[langCode]
-    ? langCode
-    : (labelStrings[langCode.substring(0, 2)] ? langCode.substring(0, 2) : 'en');
+  return (
+    labelStrings[langCode]?.[key] ??
+    labelStrings[baseLang]?.[key] ??
+    labelStrings.en[key]
+  );
+};
+
+export const applyRTLSupport = () => {
+  const langCode = window.navigator.language || 'en';
+  const baseLang = langCode.split('-')[0];
+
+  if (baseLang === 'ar' || baseLang === 'he') {
+    document.body.classList.add('rtl');
+    document.documentElement.setAttribute('lang', baseLang);
+    document.documentElement.setAttribute('dir', 'rtl');
+  } else {
+    document.body.classList.remove('rtl');
+    document.documentElement.removeAttribute('dir');
+  }
 };
