@@ -99,13 +99,28 @@
     });
   };
   
+  /* GET PREFIX AND SUFFIX */
+  const getTextDirection = (node) => {
+    const parent = node.parentElement || node;
+    return window.getComputedStyle(parent).direction;
+  };
+
   const getAdjacentTextNode = (node, offset, direction) => {
+    const textDirection = getTextDirection(node);
+
     if (node.nodeType === Node.TEXT_NODE) {
-      if (direction === 'previous' && offset > 0) {
-        return {
-          node: node,
-          text: node.textContent.substring(0, offset)
-        };
+      if (direction === 'previous') {
+        if (textDirection === 'rtl' && offset < node.length) {
+          return {
+            node: node,
+            text: node.textContent.substring(offset)
+          };
+        } else if (textDirection === 'ltr' && offset > 0) {
+          return {
+            node: node,
+            text: node.textContent.substring(0, offset)
+          };
+        }
       } else if (direction === 'next' && offset < node.length) {
         return {
           node: node,
@@ -128,17 +143,19 @@
 
     walker.currentNode = node;
     let textNode;
-    if (direction === "previous") {
+
+    if (direction === 'previous') {
       textNode = walker.previousNode();
       while (textNode && textNode.nodeType !== Node.TEXT_NODE) {
         textNode = walker.previousNode();
       }
-    } else if (direction === "next") {
+    } else if (direction === 'next') {
       textNode = walker.nextNode();
       while (textNode && textNode.nodeType !== Node.TEXT_NODE) {
         textNode = walker.nextNode();
       }
     }
+
     return textNode ? {
       node: textNode,
       text: textNode.textContent
@@ -170,7 +187,8 @@
     const matches = bodyText.match(regex);
     return matches ? matches.length > 1 : false;
   };
-
+  
+  /* GET MESSAGE */
   browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
 
     if (request.type === 'removeAllColorMarks') {
