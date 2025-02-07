@@ -107,24 +107,24 @@
 
   const getAdjacentTextNode = (node, offset, direction) => {
     const textDirection = getTextDirection(node);
-
+    
     if (node.nodeType === Node.TEXT_NODE) {
+      let extractedText;
+      
       if (direction === 'previous') {
-        if (textDirection === 'rtl' && offset < node.length) {
-          return {
-            node: node,
-            text: node.textContent.substring(offset)
-          };
-        } else if (textDirection === 'ltr' && offset > 0) {
-          return {
-            node: node,
-            text: node.textContent.substring(0, offset)
-          };
+        if (textDirection === 'rtl') {
+          extractedText = offset > 0 ? node.textContent.substring(0, offset).trim() : '';
+        } else {
+          extractedText = offset > 0 ? node.textContent.substring(0, offset).trim() : '';
         }
-      } else if (direction === 'next' && offset < node.length) {
+      } else if (direction === 'next') {
+        extractedText = node.textContent.substring(offset);
+      }
+
+      if (extractedText) {
         return {
           node: node,
-          text: node.textContent.substring(offset)
+          text: extractedText
         };
       }
     }
@@ -163,17 +163,8 @@
   };
 
   const getPrefixAndSuffix = (range) => {
-    const prevResult = getAdjacentTextNode(
-      range.startContainer,
-      range.startOffset,
-      'previous'
-    );
-
-    const nextResult = getAdjacentTextNode(
-      range.endContainer,
-      range.endOffset,
-      'next'
-    );
+    const prevResult = getAdjacentTextNode(range.startContainer, range.startOffset, 'previous');
+    const nextResult = getAdjacentTextNode(range.endContainer, range.endOffset, 'next');
 
     const prefix = prevResult ? prevResult.text.trim() : '';
     const suffix = nextResult ? nextResult.text.trim() : '';
@@ -330,47 +321,52 @@
         };
 
         const findMatches = (nodeInfo, searchText) => {
+          const mapping = [];
           let fullText = '';
+          let fullTextIndex = 0;
+          
           nodeInfo.forEach(info => {
-            fullText += info.node.textContent;
+            const text = info.node.textContent;
+            const normalizedText = text
+              .replace(/\s+/g, ' ')
+              .replace(/\u200F/g, '');
+            
+            for (let i = 0; i < normalizedText.length; i++) {
+              mapping.push({
+                originalIndex: info.start + i,
+                normalizedIndex: fullTextIndex + i
+              });
+            }
+            
+            fullText += normalizedText;
+            fullTextIndex += normalizedText.length;
           });
-
+          
+          const normalizedSearchText = searchText
+            .replace(/\s+/g, ' ')
+            .replace(/\u200F/g, '');
+          
           const matches = [];
           let startIndex = 0;
+          
           while (true) {
-            const index = fullText.indexOf(searchText, startIndex);
+            const index = fullText.indexOf(normalizedSearchText, startIndex);
             if (index === -1) break;
             
-            matches.push({
-              start: index,
-              end: index + searchText.length
-            });
+            const startMapping = mapping.find(m => m.normalizedIndex === index);
+            const endMapping = mapping.find(m => m.normalizedIndex === index + normalizedSearchText.length - 1);
+            
+            if (startMapping && endMapping) {
+              matches.push({
+                start: startMapping.originalIndex,
+                end: endMapping.originalIndex + 1
+              });
+            }
+            
             startIndex = index + 1;
           }
           
           return matches;
-        };
-
-        const matchWithPrefixSuffix = (nodeInfo, mark) => {
-          const matches = [];
-          let start = 0;
-          let end = 0;
-
-          nodeInfo.forEach(({ node, start: nodeStart }) => {
-            const nodeText = node.textContent.trim();
-
-            const prefixStart = nodeText.indexOf(mark.prefix);
-            if (prefixStart !== -1) {
-              start = nodeStart + prefixStart + mark.prefix.length + 1;
-            }
-
-            const suffixStart = nodeText.indexOf(mark.suffix);
-            if (suffixStart !== -1 && suffixStart > prefixStart) {
-              end = nodeStart + suffixStart;
-            }
-          });
-
-          return start !== end ? [{ start, end }] : [];
         };
 
         const applyHighlight = (nodeRanges, mark) => {
@@ -392,11 +388,7 @@
         };
 
         const nodeInfo = collectTextNodesWithPositions(document.body);
-        let matches = findMatches(nodeInfo, mark.text);
-
-        if (matches.length === 0) {
-          matches = matchWithPrefixSuffix(nodeInfo, mark);
-        }
+        const matches = findMatches(nodeInfo, mark.text);
 
         matches.forEach(match => {
           const nodeRanges = findNodesForRange(nodeInfo, match.start, match.end);
@@ -431,5 +423,4 @@
   } else {
     initializeContent();
   }
-  
 })();
