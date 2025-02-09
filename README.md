@@ -1,8 +1,8 @@
 # ColorMark for Safari Extension
 
-This Safari extension lets you highlight any text on web pages with various colors using the built-in system color picker. Highlight key content with ease and share direct links to highlighted sections for precise reference. With the latest OS features, highlighting and sharing text has never been easier, making it simple for others to find and understand important information.
+This Safari extension lets you highlight any text on web pages using various colors with the built-in system color picker. It’s easy to mark important content and share direct links to your highlighted sections for quick reference. Your highlights will stay saved until you remove them manually or the webpage content changes, so they are always ready when you return. With the latest OS features, highlighting and sharing text has never been easier, helping others quickly find and understand key information.
 
-Ideal for educators, students, researchers, and presenters who work with web-based content. Whether you’re preparing study materials, sharing research findings, or creating engaging presentations, this extension helps you organize and communicate ideas effectively.
+Perfect for educators, students, researchers, and presenters working with web content. Whether you’re preparing study materials, sharing research findings, or creating engaging presentations, this extension helps you organize and share your ideas clearly and effectively.
 
 ## Installation & Uninstallation
 
@@ -18,11 +18,18 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 ## Usage
 
 1. Load the web page.
-2. Select the text within the web page.
+2. Select the text on the web page.
 3. Tap the icon next to the address bar and choose the extension. The extension also supports the "ColorMark" command from the context menu.
-4. A window will slide up from the bottom on iPhone, while a pop-up window will appear on iPad and Mac. You can change the default highlight color, remove highlighted items, modify their colors, or share them using the Text Fragment API or the Share Sheet API.
+4. A window will slide up from the bottom on iPhone, while a pop-up window will appear on iPad and Mac. You can change the default highlight color, remove highlighted items, modify their colors, or share them using the Text Fragment API with the Share Sheet API.
 
 ## Version History
+
+### 1.1 - 2025-02-09
+
+#### **macOS**
+
+- Improved RTL text handling and resolved display issues
+- Added support for all languages in the App Store
 
 ### 1.0 - 2025-02-04
 
