@@ -214,7 +214,12 @@ const buildPopup = async (url, color, sortedIds) => {
   const markedTexts = result[url] || [];
   
   const sortedMarks = sortedIds.map(id => markedTexts.find(mark => mark.id === id));
-  
+
+  if (sortedMarks.some(mark => mark === undefined)) {
+    console.warn('ID mismatch detected. Falling back to original order.');
+    sortedMarks = markedTexts;
+  }
+
   const ul = document.getElementById('colorMarkList');
   const clearAllMarks = document.getElementById('clearAllMarks');
 
