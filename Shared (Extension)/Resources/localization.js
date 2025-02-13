@@ -14,14 +14,14 @@ const labelStrings = {
     "editDone": "Done"
   },
   "ar": {
-    "contextMenu": "علامةاللون",
+    "contextMenu": "علامة اللون",
     "onError": "لا توجد علامات ألوان.",
     "clearAllMarks": "مسح كل العلامات",
     "defaultColor": "العلامة الافتراضية",
     "editDone": "تم"
   },
   "ar-SA": {
-    "contextMenu": "علامةاللون",
+    "contextMenu": "علامة اللون",
     "onError": "لا توجد علامات ألوان.",
     "clearAllMarks": "مسح كل العلامات",
     "defaultColor": "العلامة الافتراضية",
@@ -63,22 +63,22 @@ const labelStrings = {
     "editDone": "Έγινε"
   },
   "en-AU": {
-    "contextMenu": "ColorMark",
-    "onError": "There are no color marks.",
+    "contextMenu": "ColourMark",
+    "onError": "There are no colour marks.",
     "clearAllMarks": "Clear All Marks",
     "defaultColor": "Default Mark",
     "editDone": "Done"
   },
   "en-CA": {
-    "contextMenu": "ColorMark",
-    "onError": "There are no color marks.",
+    "contextMenu": "ColourMark",
+    "onError": "There are no colour marks.",
     "clearAllMarks": "Clear All Marks",
     "defaultColor": "Default Mark",
     "editDone": "Done"
   },
   "en-GB": {
-    "contextMenu": "ColorMark",
-    "onError": "There are no color marks.",
+    "contextMenu": "ColourMark",
+    "onError": "There are no colour marks.",
     "clearAllMarks": "Clear All Marks",
     "defaultColor": "Default Mark",
     "editDone": "Done"
@@ -133,14 +133,14 @@ const labelStrings = {
     "editDone": "पूर्ण"
   },
   "hr": {
-    "contextMenu": "OznakaBoja",
+    "contextMenu": "OznakaBoje",
     "onError": "Nema oznaka u boji.",
     "clearAllMarks": "Izbriši sve oznake",
     "defaultColor": "Zadana oznaka",
     "editDone": "Gotovo"
   },
   "hu": {
-    "contextMenu": "SzinJeloles",
+    "contextMenu": "SzínJelölés",
     "onError": "Nincsenek színes jelölések.",
     "clearAllMarks": "Összes jelölés törlése",
     "defaultColor": "Alapértelmezett jelölés",
@@ -154,7 +154,7 @@ const labelStrings = {
     "editDone": "Selesai"
   },
   "it": {
-    "contextMenu": "ColorMark",
+    "contextMenu": "MarcaColore",
     "onError": "Non ci sono marcature colorate.",
     "clearAllMarks": "Cancella tutte le marcature",
     "defaultColor": "Marcatura predefinita",
