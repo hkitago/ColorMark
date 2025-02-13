@@ -173,8 +173,11 @@
   };
 
   const isTextDuplicateInPage = (text) => {
-    const bodyText = document.body.innerText;
-    const regex = new RegExp(text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+    const bodyText = document.body.innerText.replace(/[\u200E\u200F\u202A-\u202E]/g, '').replace(/\s+/g, ' ').trim();
+    const normalizedText = text.replace(/[\u200E\u200F\u202A-\u202E]/g, '').replace(/\s+/g, ' ').trim();
+
+    const regex = new RegExp(normalizedText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+
     const matches = bodyText.match(regex);
     return matches ? matches.length > 1 : false;
   };
@@ -385,12 +388,18 @@
             wrapper.appendChild(fragment);
             range.insertNode(wrapper);
           }
+          
+          return true;
         };
 
         const nodeInfo = collectTextNodesWithPositions(document.body);
         const matches = findMatches(nodeInfo, mark.text);
-
-        matches.forEach(match => {
+        
+        let isHighlightApplied = false;
+        
+        for (const match of matches) {
+          if (isHighlightApplied) break;
+          
           const nodeRanges = findNodesForRange(nodeInfo, match.start, match.end);
 
           if (nodeRanges.length > 0) {
@@ -402,12 +411,16 @@
             tempRange.setEnd(lastNode, nodeRanges[nodeRanges.length - 1].endOffset);
             
             const { prefix: actualPrefix, suffix: actualSuffix } = getPrefixAndSuffix(tempRange);
-            
-            if (mark.prefix === actualPrefix || mark.suffix === actualSuffix) {
-              applyHighlight(nodeRanges, mark);
+
+            if (mark.isDuplicate) {
+              if (mark.prefix === actualPrefix && mark.suffix === actualSuffix) {
+                isHighlightApplied = applyHighlight(nodeRanges, mark);
+              }
+            } else {
+              isHighlightApplied = applyHighlight(nodeRanges, mark);
             }
           }
-        });
+        }
       };
 
       for (const mark of colorMarks) {
