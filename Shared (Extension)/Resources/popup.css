@@ -169,6 +169,11 @@ input[type="color"]#dummyColorInput {
   visibility: hidden;
 }
 
+.rtl input[type="color"]#dummyColorInput {
+  right: initial;
+  left: 30px;
+}
+
 @media (prefers-color-scheme: dark) {
   body {
     background-color: rgb(35 35 33);
