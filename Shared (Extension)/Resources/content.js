@@ -331,8 +331,18 @@
           nodeInfo.forEach(info => {
             const text = info.node.textContent;
             const normalizedText = text
-              .replace(/\s+/g, ' ')
-              .replace(/\u200F/g, '');
+              .replace(/[\s\u3000]+/g, ' ')
+              .replace(/\u200F/g, '')
+              .trim();
+            
+            if (fullText) {
+              mapping.push({
+                originalIndex: info.start,
+                normalizedIndex: fullTextIndex
+              });
+              fullText += ' ';
+              fullTextIndex += 1;
+            }
             
             for (let i = 0; i < normalizedText.length; i++) {
               mapping.push({
@@ -346,8 +356,9 @@
           });
           
           const normalizedSearchText = searchText
-            .replace(/\s+/g, ' ')
-            .replace(/\u200F/g, '');
+            .replace(/[\s\u3000]+/g, ' ')
+            .replace(/\u200F/g, '')
+            .trim();
           
           const matches = [];
           let startIndex = 0;
