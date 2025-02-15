@@ -43,6 +43,7 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 
 ## Compatibility
 
+- iOS/iPadOS 16+
 - macOS 11.5+
 
 ## License
