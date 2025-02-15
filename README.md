@@ -17,10 +17,10 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 
 ## Usage
 
-1. Load the web page.
+1. Load the web page. It is recommended to use a webpage with a stable and permanent URL. Dynamic pages or frequently changing content may affect the functionality of text fragments.
 2. Select the text on the web page.
-3. Tap the icon next to the address bar and choose the extension. The extension also supports the "ColorMark" command from the context menu.
-4. A window will slide up from the bottom on iPhone, while a pop-up window will appear on iPad and Mac. You can change the default highlight color, remove highlighted items, modify their colors, or share them using the Text Fragment API with the Share Sheet API.
+3. Tap the icon next to the address bar and choose the extension. On macOS, you can also use the "ColorMark" command from the context menu.
+4. A window will slide up from the bottom on iPhone, while a pop-up window will appear on iPad and Mac. You can change the default highlight color, remove highlighted items, modify their colors, or share them using the Text Fragment API with the Share Sheet API. *For reference, the highlighted items appear in the same order as the text within the web page.*
 
 ## Version History
 
@@ -31,9 +31,13 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 - Improved RTL text handling and resolved display issues
 - Added support for all languages in the App Store
 
-### 1.0 - 2025-02-04
+### 1.0
 
-#### **macOS**
+#### **iOS/iPadOS** - 2025-02-15
+
+- Initial release with the same core features as the macOS version
+
+#### **macOS** - 2025-02-04
 
 - Initial release
 
