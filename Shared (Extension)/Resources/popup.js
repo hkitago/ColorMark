@@ -136,7 +136,7 @@ const buildPopup = async (url, color, sortedIds) => {
   const colorBulletId = `setDefaultColorBullet-${(isMacOS() ? 'MACOS' : 'IOS')}`;
   const defaultColorBullet = document.getElementById(colorBulletId);
   
-  /* FOR MACOS */
+  /* FOR MACOS to handle Color Picker */
   const dummyColorPicker = document.getElementById('dummyColorInput');
   const bulletClickHandler = (event) => {
     bulletTarget = event.target;
@@ -169,36 +169,54 @@ const buildPopup = async (url, color, sortedIds) => {
     document.getElementById('setDefaultColorBullet-MACOS').style.display = 'none';
   }
   
-  const colorPickerChangeHandler = async (event) => {
+  const dummyColorPickerChangeHandler = async (event) => {
     const newColor = event.target.value;
     const id = bulletTarget.parentNode.dataset.id;
 
-    if (isMacOS()) {
-      bulletTarget.style.backgroundColor = newColor;
+    bulletTarget.style.backgroundColor = newColor;
 
-      if (id) {
-        await updateMarkedColor(newColor, id, url);
-      } else {
-        await saveDefaultColor(newColor);
-      }
+    if (id) {
+      await updateMarkedColor(newColor, id, url);
     } else {
-      defaultColorBullet.value = newColor;
       await saveDefaultColor(newColor);
     }
-    
+
     try {
       const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
       await browser.tabs.sendMessage(tab.id, { type: 'updateColorMark', color: newColor, id: id });
     } catch (error) {
       console.error('Fail to updating the color of mark:', error);
     }
-
   };
-  
+
+  /* FOR IOS to handle Color Picker */
+  const colorPickerChangeHandler = async (event) => {
+    const newColor = event.target.value;
+    const id = event.target.parentNode.dataset.id;
+
+    if (id) {
+      await updateMarkedColor(newColor, id, url);
+    }
+
+    try {
+      const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+      await browser.tabs.sendMessage(tab.id, { type: 'updateColorMark', color: newColor, id: id });
+    } catch (error) {
+      console.error('Fail to updating the color of mark:', error);
+    }
+  };
+
+  const defaultColorPickerChangeHandler = async (event) => {
+    const newColor = event.target.value;
+
+    defaultColorBullet.value = newColor;
+    await saveDefaultColor(newColor);
+  };
+
   if (isMacOS()) {
-    dummyColorPicker.addEventListener('change', colorPickerChangeHandler);
+    dummyColorPicker.addEventListener('change', dummyColorPickerChangeHandler);
   } else {
-    defaultColorBullet.addEventListener('change', colorPickerChangeHandler);
+    defaultColorBullet.addEventListener('change', defaultColorPickerChangeHandler);
   }
   
   const onMouseOver = (event) => {
@@ -231,8 +249,11 @@ const buildPopup = async (url, color, sortedIds) => {
   sortedMarks.forEach((markedText) => {
     const li = document.createElement('li');
     li.dataset.id = markedText.id;
-    li.addEventListener('mouseover', onMouseOver);
-    li.addEventListener('mouseout', onMouseOut);
+    
+    if (isMacOS()) {
+      li.addEventListener('mouseover', onMouseOver);
+      li.addEventListener('mouseout', onMouseOut);
+    }
 
     // Btn to delete the item
     const deleteIcon = document.createElement('img');
@@ -272,6 +293,9 @@ const buildPopup = async (url, color, sortedIds) => {
     // Btn to share the item
     const shareSpan = document.createElement('span');
     shareSpan.classList.add('colorLink');
+    if (isMacOS()) {
+      shareSpan.classList.add('macos');
+    }
     li.appendChild(shareSpan);
     
     shareSpan.addEventListener('click', async (event) => {
@@ -297,8 +321,9 @@ const buildPopup = async (url, color, sortedIds) => {
     } else {
       const bulletColorInput = document.createElement('input');
       bulletColorInput.type = 'color';
-      bulletSpan.value = markedText.color;
+      bulletColorInput.value = markedText.color;
       bulletColorInput.classList.add('colorBullet');
+      bulletColorInput.addEventListener('change', colorPickerChangeHandler);
       li.appendChild(bulletColorInput);
     }
     

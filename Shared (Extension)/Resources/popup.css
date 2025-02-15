@@ -124,20 +124,20 @@ main > ul > li > span.colorLink {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: contain;
+}
+
+main > ul > li > span.colorLink.macos {
   display: none;
+}
+
+main > ul > li.hover > span.colorLink.macos {
+  display: inline-block;
+  cursor: pointer;
 }
 
 .rtl main > ul > li > span.colorLink {
   margin-left: 0px;
   margin-right: 15px;
-}
-
-main > ul > li.hover > span.colorLink {
-  display: inline-block;
-}
-
-main > ul > li.hover > span.colorLink:hover {
-  cursor: pointer;
 }
 
 footer {
