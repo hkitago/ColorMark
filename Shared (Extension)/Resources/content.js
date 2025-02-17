@@ -1,4 +1,15 @@
 (() => {
+  const normalizeUrl = (url) => {
+    try {
+      let u = new URL(url);
+      u.hash = u.hash.includes("~:text=") ? "" : u.hash;
+      return u.toString();
+    } catch (error) {
+        console.error("Invalid URL:", url);
+        return url;
+    }
+  };
+
   const generateUUID = () => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
       const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
@@ -237,7 +248,9 @@
 
       const range = selection.getRangeAt(0);
       const serialized = serializeRange(range);
-      const url = request.url ? request.url : window.location.href;
+      const rawUrl = request.url ? request.url : window.location.href;
+      const url = normalizeUrl(rawUrl);
+
       const defaultColor = request.color ? request.color : getDefaultColor();
       const id = generateUUID();
 
@@ -276,7 +289,7 @@
 
   const initializeContent = async () => {
     try {
-      const url = window.location.href;
+      const url = normalizeUrl(window.location.href);
       const result = await browser.storage.local.get(url);
       const colorMarks = result[url] || [];
 

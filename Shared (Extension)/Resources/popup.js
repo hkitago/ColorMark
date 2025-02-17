@@ -1,6 +1,17 @@
 import { getCurrentLangLabelString, applyRTLSupport } from './localization.js';
 import { isMacOS, saveDefaultColor, getDefaultColor } from './utils.js';
 
+const normalizeUrl = (url) => {
+  try {
+    let u = new URL(url);
+    u.hash = u.hash.includes("~:text=") ? "" : u.hash;
+    return u.toString();
+  } catch (error) {
+      console.error("Invalid URL:", url);
+      return url;
+  }
+};
+
 const updateMarkedColor = async (newColor, id, url) => {
   if (!newColor) {
     throw new Error('Color value is required');
@@ -347,7 +358,6 @@ const buildPopup = async (url, color, sortedIds) => {
       console.error('Failed to clear all marks:', error);
     }
   });
-
 };
 
 let isInitialized = false;
@@ -359,7 +369,7 @@ const initializePopup = async () => {
   try {
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
     const defaultColor = await getDefaultColor();
-    const tabUrl = tab.url;
+    const tabUrl = normalizeUrl(tab.url);
   
     const response = await browser.tabs.sendMessage(tab.id, {
       type: 'addColorMark',
