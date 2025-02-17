@@ -397,15 +397,20 @@
         };
 
         const matchWithPrefixSuffix = (nodeInfo, mark) => {
-          let start = null;
+          let start = 0;
           let ends = [];
 
-          nodeInfo.forEach(({ node, start: nodeStart }) => {
+          nodeInfo.forEach(({ node, start: nodeStart }, index) => {
             const nodeText = node.textContent.trim();
 
             const prefixStart = nodeText.indexOf(mark.prefix);
             if (prefixStart !== -1) {
-              start = nodeStart + prefixStart + mark.prefix.length;
+              if (index + 1 < nodeInfo.length) {
+                const nextNode = nodeInfo[index + 1].node.textContent.trim();
+                if (mark.text.startsWith(nextNode)) {
+                  start = nodeStart + prefixStart + mark.prefix.length;
+                }
+              }
             }
 
             const suffixStart = nodeText.indexOf(mark.suffix);
@@ -414,7 +419,7 @@
             }
           });
 
-          if (start === null || ends.length === 0) return [];
+          if (start === 0 || ends.length === 0) return [];
 
           const validEnds = ends.filter(end => end > start);
           const end = validEnds.length > 0 ? Math.min(...validEnds) : null;
