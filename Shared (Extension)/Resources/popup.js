@@ -88,6 +88,8 @@ const formatHtmlWithBreaks = (htmlString) => {
 };
 
 const constructFragmentUrl = (tabUrl, markedText) => {
+  const url = normalizeUrl(tabUrl);
+
   let fragmentParam = `${encodeURIComponent(markedText.text)}`;
   
   if (isBlockElement(markedText.html)) {
@@ -129,7 +131,7 @@ const constructFragmentUrl = (tabUrl, markedText) => {
     params = `${fragmentParam}`;
   }
 
-  return `${tabUrl}#:~:text=${params}`;
+  return `${url}#:~:text=${params}`;
 };
 
 const buildPopup = async (url, color, sortedIds) => {
