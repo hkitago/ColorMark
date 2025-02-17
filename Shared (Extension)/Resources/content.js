@@ -396,6 +396,32 @@
           return matches;
         };
 
+        const matchWithPrefixSuffix = (nodeInfo, mark) => {
+          let start = null;
+          let ends = [];
+
+          nodeInfo.forEach(({ node, start: nodeStart }) => {
+            const nodeText = node.textContent.trim();
+
+            const prefixStart = nodeText.indexOf(mark.prefix);
+            if (prefixStart !== -1) {
+              start = nodeStart + prefixStart + mark.prefix.length;
+            }
+
+            const suffixStart = nodeText.indexOf(mark.suffix);
+            if (suffixStart !== -1 && start !== null && suffixStart > prefixStart) {
+              ends.push(nodeStart + suffixStart);
+            }
+          });
+
+          if (start === null || ends.length === 0) return [];
+
+          const validEnds = ends.filter(end => end > start);
+          const end = validEnds.length > 0 ? Math.min(...validEnds) : null;
+
+          return end !== null ? [{ start, end }] : [];
+        };
+        
         const applyHighlight = (nodeRanges, mark) => {
           for (let i = nodeRanges.length - 1; i >= 0; i--) {
             const { node, startOffset, endOffset } = nodeRanges[i];
@@ -417,7 +443,11 @@
         };
 
         const nodeInfo = collectTextNodesWithPositions(document.body);
-        const matches = findMatches(nodeInfo, mark.text);
+        let matches = findMatches(nodeInfo, mark.text);
+        
+        if (matches.length === 0) {
+          matches = matchWithPrefixSuffix(nodeInfo, mark);
+        }
         
         let isHighlightApplied = false;
         
