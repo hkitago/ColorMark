@@ -70,8 +70,8 @@ const labelStrings = {
     "editDone": "Done"
   },
   "en-CA": {
-    "contextMenu": "ColourMark",
-    "onError": "There are no colour marks.",
+    "contextMenu": "ColorMark",
+    "onError": "There are no color marks.",
     "clearAllMarks": "Clear All Marks",
     "defaultColor": "Default Mark",
     "editDone": "Done"

@@ -55,7 +55,7 @@
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ColourMark"
+            "value" : "ColorMark"
           }
         },
         "en-GB" : {
@@ -294,7 +294,7 @@
         "en-CA" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "ColourMark"
+            "value" : "ColorMark"
           }
         },
         "en-GB" : {
