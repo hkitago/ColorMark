@@ -24,17 +24,24 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 
 ## Version History
 
+### 1.1.1 - 2025-02-19
+
+#### **macOS**
+
+- Improve text highlighting accuracy when selecting text across multiple tags
+- Fix app names and phrasing in certain languages for localization improvements
+
 ### 1.1
 
 #### **iOS/iPadOS** - 2025-02-18
 
 - Fix the bug with link sharing to ensure consistent URL handling
-- Added support for all languages in the App Store
+- Add support for all languages in the App Store
 
 #### **macOS** - 2025-02-09
 
-- Improved RTL text handling and resolved display issues
-- Added support for all languages in the App Store
+- Improve RTL text handling and resolved display issues
+- Add support for all languages in the App Store
 
 ### 1.0
 
