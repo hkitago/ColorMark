@@ -83,13 +83,6 @@ body.platform-mac button {
   min-width: 70vw;
 }
 
-img {
-/*
- border-radius: 30px;
- box-shadow: 0 1px 3px rgb(0 0 0/.7);
- */
-}
-
 p {
   overflow-wrap: break-word;
   text-align: left;
