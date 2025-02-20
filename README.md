@@ -1,4 +1,4 @@
-# ColorMark for Safari Extension
+# <img src="https://raw.githubusercontent.com/hkitago/ColorMark/refs/heads/main/Shared%20(App)/Resources/Icon.png" height="36" valign="bottom"/> ColorMark for Safari Extension
 
 This Safari extension lets you highlight any text on web pages using various colors with the built-in system color picker. It’s easy to mark important content and share direct links to your highlighted sections for quick reference. Your highlights will stay saved until you remove them manually or the webpage content changes, so they are always ready when you return. With the latest OS features, highlighting and sharing text has never been easier, helping others quickly find and understand key information.
 
