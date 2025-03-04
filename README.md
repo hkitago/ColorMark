@@ -24,9 +24,14 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 
 ## Version History
 
-### 1.1.1 - 2025-02-19
+### 1.1.1
 
-#### **macOS**
+#### **iOS/iPadOS** - 2025-02-24
+
+- Added support for dark mode icons
+- Improved localization by adjusting phrases in certain languages
+
+#### **macOS** - 2025-02-19
 
 - Improve text highlighting accuracy when selecting text across multiple tags
 - Fix app names and phrasing in certain languages for localization improvements
@@ -52,6 +57,10 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 #### **macOS** - 2025-02-04
 
 - Initial release
+
+## Known Issues
+
+- Improved accuracy of highlight restoration and reducing false matches, but issues may still occur on mobile sites.
 
 ## Compatibility
 
