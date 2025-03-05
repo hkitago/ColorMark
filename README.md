@@ -24,6 +24,12 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 
 ## Version History
 
+### 1.2 - 2025-03-05
+
+#### **Common**
+
+- Improved text matching accuracy, ensuring more precise highlight restoration when revisiting
+
 ### 1.1.1
 
 #### **iOS/iPadOS** - 2025-02-24
@@ -64,7 +70,7 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 
 ## Compatibility
 
-- iOS/iPadOS 16+
+- iOS/iPadOS 16.6+
 - macOS 11.5+
 
 ## License
