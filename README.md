@@ -17,7 +17,7 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 
 ## Usage
 
-1. Load the web page. It is recommended to use a webpage with a stable and permanent URL. Dynamic pages or frequently changing content may affect the functionality of text fragments and may prevent highlights from being restored upon revisiting the page.
+1. Load a web page. It is recommended to use the webpage with a stable and permanent URL. Dynamic pages or frequently changing content may affect the functionality of text fragments and may prevent highlights from being restored upon revisiting the page.
 2. Select the text on the web page.
 3. Tap the icon next to the address bar and choose the extension. On macOS, you can also use the "ColorMark" command from the context menu.
 4. A window will slide up from the bottom on iPhone, while a pop-up window will appear on iPad and Mac. You can change the default highlight color, remove highlighted items, modify their colors, or share them using the Text Fragment API with the Share Sheet API. *For reference, the highlighted items appear in the same order as the text within the web page.*
