@@ -2,10 +2,10 @@
   const normalizeUrl = (url) => {
     try {
       let u = new URL(url);
-      u.hash = u.hash.includes("~:text=") ? "" : u.hash;
+      u.hash = u.hash.includes('~:text=') ? '' : u.hash;
       return u.toString();
     } catch (error) {
-        console.error("Invalid URL:", url);
+        console.error('Invalid URL:', url);
         return url;
     }
   };
@@ -24,6 +24,18 @@
     return Array.from(colorMarkElements)
       .map(node => node.getAttribute('data-id'))
       .filter((id, index, array) => array.indexOf(id) === index);
+  };
+  
+  const createMarkElement = (color, id) => {
+    const wrapper = document.createElement('mark');
+    wrapper.style.color = 'inherit';
+    wrapper.style.fontStyle = 'initial';
+    wrapper.style.fontWeight = 'inherit';
+    wrapper.style.fontSize = 'inherit';
+    wrapper.style.backgroundColor = color;
+    wrapper.dataset.id = id;
+    wrapper.classList.add('colorMarkText');
+    return wrapper;
   };
   
   const serializeRange = (range) => {
@@ -48,11 +60,7 @@
   };
 
   const highlightText = (range, color, id) => {
-    const wrapper = document.createElement('mark');
-    wrapper.style.backgroundColor = color;
-    wrapper.dataset.id = id;
-    wrapper.classList.add('colorMarkText');
-    
+    const wrapper = createMarkElement(color, id);
     const startContainer = range.startContainer;
     const endContainer = range.endContainer;
     
@@ -193,18 +201,46 @@
     return matches ? matches.length > 1 : false;
   };
   
+  const scrollToMark = (dataId) => {
+    const targetNode = document.querySelector(`[data-id="${dataId}"]`);
+    if (targetNode) {
+      targetNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    } else {
+      console.warn(`Node with data-id="${dataId}" not found`);
+    }
+  }
+
+  const removeAllColorMarks = () => {
+    const markToRemoves = document.querySelectorAll('.colorMarkText');
+
+    markToRemoves.forEach((mark) => {
+      const parent = mark.parentNode;
+      const textNode = document.createTextNode(mark.textContent);
+      parent.replaceChild(textNode, mark);
+    });
+  };
+  
   /* GET MESSAGE */
   browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+    if (request.type === 'scrollToMark') {
+      scrollToMark(request.dataId);
+      return;
+    }
 
-    if (request.type === 'removeAllColorMarks') {
-      const markToRemoves = document.querySelectorAll('.colorMarkText');
-
-      markToRemoves.forEach((mark) => {
-        const parent = mark.parentNode;
-        const textNode = document.createTextNode(mark.textContent);
-        parent.replaceChild(textNode, mark);
-      });
+    if (request.type === 'removeAllColorMarks' || request.type === 'syncColorMark') {
+//      const markToRemoves = document.querySelectorAll('.colorMarkText');
+//
+//      markToRemoves.forEach((mark) => {
+//        const parent = mark.parentNode;
+//        const textNode = document.createTextNode(mark.textContent);
+//        parent.replaceChild(textNode, mark);
+//      });
+      removeAllColorMarks();
       
+      if (request.type === 'syncColorMark') {
+        initializeContent();
+      }
+
       return;
     }
 
@@ -401,21 +437,42 @@
           let ends = [];
 
           nodeInfo.forEach(({ node, start: nodeStart }, index) => {
-            const nodeText = node.textContent.trim();
+            const nodeText = node.textContent.replace(/\s+/g, ' ').trim();
 
             const prefixStart = nodeText.indexOf(mark.prefix);
             if (prefixStart !== -1) {
-              if (index + 1 < nodeInfo.length) {
-                const nextNode = nodeInfo[index + 1].node.textContent.trim();
-                if (mark.text.startsWith(nextNode)) {
-                  start = nodeStart + prefixStart + mark.prefix.length;
+              const prefixEnd = prefixStart + mark.prefix.length;
+              
+              const nodeTextWithoutPrefix = nodeText.replace(mark.prefix, '');
+              const isPrefixAndTextMixed = nodeTextWithoutPrefix !== '' && mark.text.startsWith(nodeTextWithoutPrefix);
+
+              if (isPrefixAndTextMixed) {
+                start = nodeStart + prefixEnd;
+              } else if (index + 1 < nodeInfo.length) {
+                const nextNodeInfo = nodeInfo[index + 1];
+                const nextNodeText = nextNodeInfo.node.textContent.replace(/\s+/g, ' ').trim();
+                
+                if (mark.text.startsWith(nextNodeText)) {
+                  start = nextNodeInfo.start + prefixStart;
                 }
               }
             }
 
-            const suffixStart = nodeText.indexOf(mark.suffix);
-            if (suffixStart !== -1 && start !== null && suffixStart > prefixStart) {
-              ends.push(nodeStart + suffixStart);
+            if (start > 0) {
+              const suffixStart = nodeText.indexOf(mark.suffix);
+              if (suffixStart !== -1) {
+                if (mark.suffix !== '' && nodeText.includes(mark.suffix)) {
+                  ends.push(nodeStart + suffixStart);
+                } else {
+                  if (index > 0) {
+                    const prevNodeInfo = nodeInfo[index - 1];
+                    const prevNodeText = prevNodeInfo.node.textContent.replace(/\s+/g, ' ').trim();
+                    if (mark.text.endsWith(prevNodeText)) {
+                      ends.push(nodeStart + suffixStart);
+                    }
+                  }
+                }
+              }
             }
           });
 
@@ -427,18 +484,37 @@
           return end !== null ? [{ start, end }] : [];
         };
         
+        const isRangeAlreadyHighlighted = (range) => {
+          const startNode = range.startContainer;
+          const endNode = range.endContainer;
+
+          if (startNode === endNode) {
+            return startNode.parentNode && startNode.parentNode.tagName === 'MARK';
+          }
+
+          let currentNode = startNode;
+          while (currentNode !== endNode) {
+            if (currentNode.nodeType === 1 && currentNode.tagName === 'MARK') {
+              return true;
+            }
+            currentNode = currentNode.nextSibling || currentNode.parentNode;
+          }
+
+          return false;
+        };
+
         const applyHighlight = (nodeRanges, mark) => {
           for (let i = nodeRanges.length - 1; i >= 0; i--) {
             const { node, startOffset, endOffset } = nodeRanges[i];
             const range = document.createRange();
             range.setStart(node, startOffset);
             range.setEnd(node, endOffset);
-
-            const wrapper = document.createElement('mark');
-            wrapper.style.backgroundColor = mark.color;
-            wrapper.dataset.id = mark.id;
-            wrapper.classList.add('colorMarkText');
             
+            if (isRangeAlreadyHighlighted(range)) {
+              continue;
+            }
+            
+            const wrapper = createMarkElement(mark.color, mark.id);
             const fragment = range.extractContents();
             wrapper.appendChild(fragment);
             range.insertNode(wrapper);
@@ -448,36 +524,18 @@
         };
 
         const nodeInfo = collectTextNodesWithPositions(document.body);
-        let matches = findMatches(nodeInfo, mark.text);
+        let matches = matchWithPrefixSuffix(nodeInfo, mark);
         
         if (matches.length === 0) {
-          matches = matchWithPrefixSuffix(nodeInfo, mark);
+          matches = findMatches(nodeInfo, mark.text);
         }
         
-        let isHighlightApplied = false;
-        
-        for (const match of matches) {
-          if (isHighlightApplied) break;
-          
+        if (matches.length > 0) {
+          const match = matches[0];
           const nodeRanges = findNodesForRange(nodeInfo, match.start, match.end);
 
           if (nodeRanges.length > 0) {
-            const firstNode = nodeRanges[0].node;
-            const lastNode = nodeRanges[nodeRanges.length - 1].node;
-            
-            const tempRange = document.createRange();
-            tempRange.setStart(firstNode, nodeRanges[0].startOffset);
-            tempRange.setEnd(lastNode, nodeRanges[nodeRanges.length - 1].endOffset);
-            
-            const { prefix: actualPrefix, suffix: actualSuffix } = getPrefixAndSuffix(tempRange);
-
-            if (mark.isDuplicate) {
-              if (mark.prefix === actualPrefix && mark.suffix === actualSuffix) {
-                isHighlightApplied = applyHighlight(nodeRanges, mark);
-              }
-            } else {
-              isHighlightApplied = applyHighlight(nodeRanges, mark);
-            }
+            applyHighlight(nodeRanges, mark);
           }
         }
       };
@@ -490,6 +548,16 @@
     }
   };
 
+  const observer = new MutationObserver((mutationsList) => {
+    for (let mutation of mutationsList) {
+      if (mutation.type === 'childList') {
+        initializeContent();
+      }
+    }
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+  
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', initializeContent, { once: true });
   } else {
