@@ -4,7 +4,7 @@
         "description": "The display name for the extension."
     },
     "extension_description": {
-        "message": "このアプリはウェブサイト上のテキストにカラフルな強調表示を追加します。",
+        "message": "このブラウザ拡張機能は、ウェブサイト上のテキストにカラフルな強調表示を追加します。",
         "description": "Description of what the extension does."
     }
 }
