@@ -57,35 +57,35 @@ const isBlockElement = (htmlString) => {
   return blockElementRegex.test(htmlString);
 };
 
-const formatHtmlWithBreaks = (htmlString) => {
-  const container = document.createElement('div');
-  container.innerHTML = htmlString;
-
-  const extractTextWithBreaks = (node) => {
-    let textContent = '';
-
-    for (const child of node.childNodes) {
-      if (child.nodeType === Node.TEXT_NODE) {
-        textContent += child.textContent.trim();
-      } else if (child.nodeType === Node.ELEMENT_NODE) {
-        const tagName = child.tagName.toLowerCase();
-
-        if (isBlockElement(`<${tagName}>`)) {
-          textContent += '\n' + extractTextWithBreaks(child) + '\n';
-        } else {
-          textContent += extractTextWithBreaks(child);
-        }
-      }
-    }
-
-    return textContent;
-  };
-
-  let finalText = extractTextWithBreaks(container);
-  finalText = finalText.replace(/\n\s*\n/g, '\n').trim();
-
-  return finalText.replace(/\n/g, '<br>');
-};
+//const formatHtmlWithBreaks = (htmlString) => {
+//  const container = document.createElement('div');
+//  container.innerHTML = htmlString;
+//
+//  const extractTextWithBreaks = (node) => {
+//    let textContent = '';
+//
+//    for (const child of node.childNodes) {
+//      if (child.nodeType === Node.TEXT_NODE) {
+//        textContent += child.textContent.trim();
+//      } else if (child.nodeType === Node.ELEMENT_NODE) {
+//        const tagName = child.tagName.toLowerCase();
+//
+//        if (isBlockElement(`<${tagName}>`)) {
+//          textContent += '\n' + extractTextWithBreaks(child) + '\n';
+//        } else {
+//          textContent += extractTextWithBreaks(child);
+//        }
+//      }
+//    }
+//
+//    return textContent;
+//  };
+//
+//  let finalText = extractTextWithBreaks(container);
+//  finalText = finalText.replace(/\n\s*\n/g, '\n').trim();
+//
+//  return finalText.replace(/\n/g, '<br>');
+//};
 
 const constructFragmentUrl = (tabUrl, markedText) => {
   const url = normalizeUrl(tabUrl);
@@ -234,6 +234,14 @@ const buildPopup = async (url, color, sortedIds) => {
   
   const onMouseOver = (event) => {
     event.target.closest('li').classList.add('hover');
+    
+    const target = event.target.closest('li');
+    if (target) {
+      const dataId = target.dataset.id;
+      browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+        browser.tabs.sendMessage(tabs[0].id, { type: 'scrollToMark', dataId: dataId });
+      });
+    }
   }
 
   const onMouseOut = (event) => {
@@ -298,8 +306,9 @@ const buildPopup = async (url, color, sortedIds) => {
     
     // Display text content
     const div = document.createElement('div');
-    const formattedHtml = isBlockElement(markedText.html) ? formatHtmlWithBreaks(markedText.html) : markedText.text;
-    div.innerHTML = formattedHtml;
+//    const formattedHtml = isBlockElement(markedText.html) ? formatHtmlWithBreaks(markedText.html) : markedText.text;
+//    div.innerHTML = formattedHtml;
+    div.textContent = markedText.text;
 
     li.appendChild(div);
     
