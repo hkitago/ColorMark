@@ -30,3 +30,17 @@ if (isMacOS()) {
     }
   });
 }
+
+// Send a message to content.js on when switching tab
+browser.tabs.onActivated.addListener((activeInfo) => {
+  browser.tabs.sendMessage(activeInfo.tabId, { type: 'syncColorMark' })
+    .catch(error => console.error('Error getting page info:', error));
+});
+
+// Send a message to content.js when the tab's status is complete
+browser.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
+  if (changeInfo.status === 'complete') {
+    browser.tabs.sendMessage(tabId, { type: 'syncColorMark' })
+      .catch(error => console.error('Error getting page info after update:', error));
+  }
+});
