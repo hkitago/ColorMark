@@ -1,8 +1,8 @@
 # <img src="https://raw.githubusercontent.com/hkitago/ColorMark/refs/heads/main/Shared%20(App)/Resources/Icon.png" height="36" valign="bottom"/> ColorMark for Safari Extension
 
-This Safari extension lets you highlight any text on web pages using various colors with the built-in system color picker. It’s easy to mark important content and share direct links to your highlighted sections for quick reference. Your highlights will stay saved until you remove them manually or the webpage content changes, so they are always ready when you return. With the latest OS features, highlighting and sharing text has never been easier, helping others quickly find and understand key information.
+This Safari extension lets you highlight any text on web pages using various colors with your device's standard color picker. It's easy to mark important content and share direct links to your highlighted sections for quick reference. Your highlights will stay saved until you remove them manually or the webpage content changes, so they're always ready when you return. With modern sharing capabilities, highlighting and sharing text has never been easier, helping others quickly find and understand key information.
 
-Perfect for educators, students, researchers, and presenters working with web content. Whether you’re preparing study materials, sharing research findings, or creating engaging presentations, this extension helps you organize and share your ideas clearly and effectively.
+Perfect for educators, students, researchers, and presenters working with web content. Whether you're preparing study materials, sharing research findings, or creating engaging presentations, this extension helps you organize and share your ideas clearly and effectively.
 
 ## Installation & Uninstallation
 
@@ -23,6 +23,13 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 4. A window will slide up from the bottom on iPhone, while a pop-up window will appear on iPad and Mac. You can change the default highlight color, remove highlighted items, modify their colors, or share them using the Text Fragment API with the Share Sheet API. *For reference, the highlighted items appear in the same order as the text within the web page.*
 
 ## Version History
+
+### 1.2.1 - 2025-04-11
+
+#### **Common**
+
+- Added support for synchronizing marks across tabs with the same URL
+- Added smooth scrolling for the marked content
 
 ### 1.2 - 2025-03-05
 
@@ -71,7 +78,7 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 ## Compatibility
 
 - iOS/iPadOS 16.6+
-- macOS 11.5+
+- macOS 12.4+
 
 ## License
 
