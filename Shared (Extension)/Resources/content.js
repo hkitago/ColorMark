@@ -26,14 +26,39 @@
       .filter((id, index, array) => array.indexOf(id) === index);
   };
   
+  const getTextColorForBackground = (backgroundColor) => {
+    let hex = backgroundColor.replace(/^#/, '');
+    
+    if (hex.length === 3) {
+      hex = hex.split('').map(char => char + char).join('');
+    }
+    
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    
+    const brightness = (r * 0.299 + g * 0.587 + b * 0.114) / 255;
+    
+    if (brightness > 0.8) {
+      return '#000000';
+    } else if (brightness < 0.3) {
+      return '#FFFFFF';
+    } else {
+      return 'inherit';
+    }
+  };
+  
   const createMarkElement = (color, id) => {
     const wrapper = document.createElement('mark');
-    wrapper.style.color = 'inherit';
+    const textColor = getTextColorForBackground(color);
+    
+    wrapper.style.backgroundColor = color;
+    wrapper.style.color = textColor;
+    wrapper.dataset.id = id;
+
     wrapper.style.fontStyle = 'initial';
     wrapper.style.fontWeight = 'inherit';
     wrapper.style.fontSize = 'inherit';
-    wrapper.style.backgroundColor = color;
-    wrapper.dataset.id = id;
     wrapper.classList.add('colorMarkText');
     return wrapper;
   };
@@ -204,7 +229,8 @@
   const scrollToMark = (dataId) => {
     const targetNode = document.querySelector(`[data-id="${dataId}"]`);
     if (targetNode) {
-      targetNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      const blockPosition = /iPhone/.test(navigator.userAgent) ? 'start' : 'center';
+      targetNode.scrollIntoView({ behavior: 'smooth', block: blockPosition });
     } else {
       console.warn(`Node with data-id="${dataId}" not found`);
     }
@@ -224,17 +250,11 @@
   browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if (request.type === 'scrollToMark') {
       scrollToMark(request.dataId);
+      
       return;
     }
 
     if (request.type === 'removeAllColorMarks' || request.type === 'syncColorMark') {
-//      const markToRemoves = document.querySelectorAll('.colorMarkText');
-//
-//      markToRemoves.forEach((mark) => {
-//        const parent = mark.parentNode;
-//        const textNode = document.createTextNode(mark.textContent);
-//        parent.replaceChild(textNode, mark);
-//      });
       removeAllColorMarks();
       
       if (request.type === 'syncColorMark') {
@@ -260,9 +280,11 @@
 
     if (request.type === 'updateColorMark') {
       const marksToUpdate = document.querySelectorAll(`mark[data-id="${request.id}"]`);
+      const textColor = getTextColorForBackground(request.color);
 
       marksToUpdate.forEach((mark) => {
         mark.style.backgroundColor = request.color;
+        mark.style.color = textColor;
       });
       
       return;

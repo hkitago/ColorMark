@@ -232,15 +232,24 @@ const buildPopup = async (url, color, sortedIds) => {
     defaultColorBullet.addEventListener('change', defaultColorPickerChangeHandler);
   }
   
+  const scrollToMark = async (id) => {
+    if (!id) return;
+    
+    try {
+      const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+      await browser.tabs.sendMessage(tab.id, { type: 'scrollToMark', dataId: id });
+    } catch (error) {
+      console.error('Fail to scroll to the mark:', error);
+    }
+  };
+  
   const onMouseOver = (event) => {
     event.target.closest('li').classList.add('hover');
     
     const target = event.target.closest('li');
     if (target) {
       const dataId = target.dataset.id;
-      browser.tabs.query({ active: true, currentWindow: true }, (tabs) => {
-        browser.tabs.sendMessage(tabs[0].id, { type: 'scrollToMark', dataId: dataId });
-      });
+      scrollToMark(dataId);
     }
   }
 
@@ -311,7 +320,7 @@ const buildPopup = async (url, color, sortedIds) => {
     div.textContent = markedText.text;
 
     li.appendChild(div);
-    
+        
     // Btn to share the item
     const shareSpan = document.createElement('span');
     shareSpan.classList.add('colorLink');
@@ -332,6 +341,22 @@ const buildPopup = async (url, color, sortedIds) => {
       }
     });
     
+    // Btn to find the item
+    const findSpan = document.createElement('span');
+    findSpan.classList.add('colorFind');
+    if (isMacOS()) {
+      findSpan.classList.add('macos');
+    }
+    li.appendChild(findSpan);
+    
+    findSpan.addEventListener('click', async (event) => {
+      const target = event.target.closest('li');
+      if (target) {
+        const dataId = target.dataset.id;
+        scrollToMark(dataId);
+      }
+    });
+
     // Color Bullet to change the color
     if (isMacOS()) {
       const bulletSpan = document.createElement('span');
@@ -346,6 +371,9 @@ const buildPopup = async (url, color, sortedIds) => {
       bulletColorInput.value = markedText.color;
       bulletColorInput.classList.add('colorBullet');
       bulletColorInput.addEventListener('change', colorPickerChangeHandler);
+      bulletColorInput.addEventListener('click', (event) => {
+        findSpan.click();
+      });
       li.appendChild(bulletColorInput);
     }
     

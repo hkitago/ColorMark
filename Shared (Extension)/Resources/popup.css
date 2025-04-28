@@ -30,10 +30,18 @@ body {
 .colorBullet {
   width: 20px;
   height: 20px;
-  margin: 0 20px;
+  margin: 0 15px;
 
   border-radius: 50%;
   cursor: pointer;
+}
+
+input[type="color"].colorBullet {
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: none;
+  padding: 0;
 }
 
 header {
@@ -87,9 +95,9 @@ main > ul > li > p {
 }
 
 main > ul > li > img {
-  margin: 0 20px;
+  margin: 0 15px;
   width: auto;
-  height: 18px;
+  height: 20px;
 }
 
 main > ul > li > img:hover {
@@ -116,17 +124,25 @@ main > ul > li > span {
   display: block;
 }
 
-main > ul > li > span.colorLink {
-  width: 18px;
-  height: 18px;
+main > ul > li > span {
+  display: block;
+  width: 20px;
+  height: 20px;
   margin-left: 15px;
-  background-image: url(./images/icon-share.svg);
   background-repeat: no-repeat;
   background-position: center center;
   background-size: contain;
 }
 
-main > ul > li > span.colorLink.macos {
+main > ul > li > span.colorFind {
+  background-image: url(./images/icon-find.svg);
+}
+
+main > ul > li > span.colorLink {
+  background-image: url(./images/icon-share.svg);
+}
+
+main > ul > li > span.macos {
   display: none;
 }
 
@@ -162,7 +178,7 @@ footer > div.hover {
 input[type="color"]#dummyColorInput {
   position: absolute;
   bottom: 10px;
-  right: 55px;
+  right: 50px;
   z-index: -99999;
   width: 0;
   height: 0;
@@ -189,6 +205,10 @@ input[type="color"]#dummyColorInput {
   
   main > ul > li > span.colorLink {
     background-image: url(./images/icon-share-dark.svg);
+  }
+
+  main > ul > li > span.colorFind {
+    background-image: url(./images/icon-find-dark.svg);
   }
 
 }
