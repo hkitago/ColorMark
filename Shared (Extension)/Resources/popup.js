@@ -175,6 +175,7 @@ const buildPopup = async (url, color, sortedIds) => {
   };
 
   if (isMacOS()) {
+    defaultColorBullet.title = `${getCurrentLangLabelString('tooltip')['bulletColor']}`;
     defaultColorBullet.style.backgroundColor = color;
     defaultColorBullet.addEventListener('click', bulletClickHandler);
 
@@ -291,6 +292,7 @@ const buildPopup = async (url, color, sortedIds) => {
 
     // Btn to delete the item
     const deleteIcon = document.createElement('img');
+    deleteIcon.title = `${getCurrentLangLabelString('tooltip')['removeItem']}`;
     deleteIcon.src = './images/icon-minus.svg';
     li.appendChild(deleteIcon);
 
@@ -333,6 +335,7 @@ const buildPopup = async (url, color, sortedIds) => {
     const shareSpan = document.createElement('span');
     shareSpan.classList.add('colorLink');
     if (isMacOS()) {
+      shareSpan.title = `${getCurrentLangLabelString('tooltip')['shareLink']}`;
       shareSpan.classList.add('macos');
     }
     li.appendChild(shareSpan);
@@ -370,6 +373,7 @@ const buildPopup = async (url, color, sortedIds) => {
       const bulletSpan = document.createElement('span');
       bulletSpan.style.backgroundColor = markedText.color;
       bulletSpan.dataset.id = markedText.id;
+      bulletSpan.title = `${getCurrentLangLabelString('tooltip')['bulletColor']}`;
       bulletSpan.classList.add('colorBullet');
       bulletSpan.addEventListener('click', bulletClickHandler);
       li.appendChild(bulletSpan);
