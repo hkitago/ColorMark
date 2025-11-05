@@ -1,5 +1,5 @@
 import { getCurrentLangLabelString, applyRTLSupport } from './localization.js';
-import { isMacOS, saveDefaultColor, getDefaultColor } from './utils.js';
+import { isIOS, isIPadOS, isMacOS, saveDefaultColor, getDefaultColor } from './utils.js';
 
 const normalizeUrl = (url) => {
   try {
@@ -16,11 +16,11 @@ const updateMarkedColor = async (newColor, id, url) => {
   if (!newColor) {
     throw new Error('Color value is required');
   }
-  
+
   try {
     const result = await browser.storage.local.get(url);
     const markedTexts = result[url] || [];
-    
+
     const updatedMarkedTexts = markedTexts.map(item => {
       if (item.id === id) {
         return {
@@ -30,7 +30,7 @@ const updateMarkedColor = async (newColor, id, url) => {
       }
       return item;
     });
-    
+
     await browser.storage.local.set({ [url]: updatedMarkedTexts });
   } catch (error) {
     console.error('Fail to update the marked color to storage:', error);
@@ -42,9 +42,13 @@ const showOnError = (ul, clearAllMarks) => {
   const li = document.createElement('li');
   const p = document.createElement('p');
   p.textContent = `${getCurrentLangLabelString('onError')}`;
+
+  p.style.userSelect = 'none';
+  p.style.cursor = 'default';
+
   li.appendChild(p);
   ul.appendChild(li);
-  
+
   clearAllMarks.style.display = 'none';
 };
 
@@ -52,7 +56,7 @@ const isBlockElement = (htmlString) => {
   if (typeof htmlString !== 'string') {
     return false;
   }
-  
+
   const blockElementRegex = /<(h[1-6]|p|div)\b[^>]*>/i;
   return blockElementRegex.test(htmlString);
 };
@@ -91,14 +95,14 @@ const constructFragmentUrl = (tabUrl, markedText) => {
   const url = normalizeUrl(tabUrl);
 
   let fragmentParam = `${encodeURIComponent(markedText.text)}`;
-  
+
   if (isBlockElement(markedText.html)) {
     const container = document.createElement('div');
     container.innerHTML = markedText.html;
-    
+
     const extractTextNodes = (node) => {
       let textNodes = [];
-      
+
       for (const child of node.childNodes) {
         if (child.nodeType === Node.TEXT_NODE) {
           const trimmedText = child.textContent.trim();
@@ -109,12 +113,12 @@ const constructFragmentUrl = (tabUrl, markedText) => {
           textNodes = textNodes.concat(extractTextNodes(child));
         }
       }
-      
+
       return textNodes;
     };
 
     const textNodes = extractTextNodes(container).filter(text => text.trim() !== '');
-    
+
     if (textNodes.length >= 1) {
       const startText = encodeURIComponent(textNodes[0]);
       const endText = encodeURIComponent(textNodes[textNodes.length - 1]);
@@ -135,12 +139,12 @@ const constructFragmentUrl = (tabUrl, markedText) => {
 };
 
 const buildPopup = async (url, color, sortedIds) => {
-  if (navigator.userAgent.indexOf('iPhone') > -1) {
+  if (isIOS()) {
     document.body.style.width = 'initial';
   }
 
   applyRTLSupport();
-  
+
   /* HEADER */
   let bulletTarget;
 
@@ -148,7 +152,7 @@ const buildPopup = async (url, color, sortedIds) => {
 
   const colorBulletId = `setDefaultColorBullet-${(isMacOS() ? 'MACOS' : 'IOS')}`;
   const defaultColorBullet = document.getElementById(colorBulletId);
-  
+
   /* FOR MACOS to handle Color Picker */
   const dummyColorPicker = document.getElementById('dummyColorInput');
   const bulletClickHandler = (event) => {
@@ -169,19 +173,19 @@ const buildPopup = async (url, color, sortedIds) => {
     }, 1);
 
   };
-  
+
   if (isMacOS()) {
     defaultColorBullet.style.backgroundColor = color;
     defaultColorBullet.addEventListener('click', bulletClickHandler);
-    
+
     document.getElementById('setDefaultColorBullet-IOS').style.display = 'none';
   } else {
     defaultColorBullet.value = color;
-    
+
     document.getElementById('dummyColorInput').style.display = 'none';
     document.getElementById('setDefaultColorBullet-MACOS').style.display = 'none';
   }
-  
+
   const dummyColorPickerChangeHandler = async (event) => {
     const newColor = event.target.value;
     const id = bulletTarget.parentNode.dataset.id;
@@ -231,7 +235,7 @@ const buildPopup = async (url, color, sortedIds) => {
   } else {
     defaultColorBullet.addEventListener('change', defaultColorPickerChangeHandler);
   }
-  
+
   const scrollToMark = async (id) => {
     if (!id) return;
     
@@ -242,7 +246,7 @@ const buildPopup = async (url, color, sortedIds) => {
       console.error('Fail to scroll to the mark:', error);
     }
   };
-  
+
   const onMouseOver = (event) => {
     event.target.closest('li').classList.add('hover');
     
@@ -260,7 +264,7 @@ const buildPopup = async (url, color, sortedIds) => {
   /* MAIN */
   const result = await browser.storage.local.get(url);
   const markedTexts = result[url] || [];
-  
+
   const sortedMarks = sortedIds.map(id => markedTexts.find(mark => mark.id === id));
 
   if (sortedMarks.some(mark => mark === undefined)) {
@@ -279,7 +283,7 @@ const buildPopup = async (url, color, sortedIds) => {
   sortedMarks.forEach((markedText) => {
     const li = document.createElement('li');
     li.dataset.id = markedText.id;
-    
+
     if (isMacOS()) {
       li.addEventListener('mouseover', onMouseOver);
       li.addEventListener('mouseout', onMouseOut);
@@ -289,22 +293,26 @@ const buildPopup = async (url, color, sortedIds) => {
     const deleteIcon = document.createElement('img');
     deleteIcon.src = './images/icon-minus.svg';
     li.appendChild(deleteIcon);
-    
+
     deleteIcon.addEventListener('click', async (event) => {
       const li = event.target.closest('li');
       const id = li.dataset.id;
-      
+
       const updatedTexts = sortedMarks.filter(item => item.id !== id);
       li.remove();
-      
+
       const ul = document.getElementById('colorMarkList');
       if (ul.children.length === 0) {
         await browser.storage.local.remove(url);
         showOnError(ul, clearAllMarks);
       } else {
         await browser.storage.local.set({ [url]: updatedTexts });
+
+        if (ul.children.length === 1) {
+          clearAllMarks.style.display = 'none';
+        }
       }
-      
+
       try {
         const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
         await browser.tabs.sendMessage(tab.id, { type: 'removeColorMark', id: id });
@@ -312,7 +320,7 @@ const buildPopup = async (url, color, sortedIds) => {
         console.error('Fail to remove the mark:', error);
       }
     });
-    
+
     // Display text content
     const div = document.createElement('div');
 //    const formattedHtml = isBlockElement(markedText.html) ? formatHtmlWithBreaks(markedText.html) : markedText.text;
@@ -320,7 +328,7 @@ const buildPopup = async (url, color, sortedIds) => {
     div.textContent = markedText.text;
 
     li.appendChild(div);
-        
+
     // Btn to share the item
     const shareSpan = document.createElement('span');
     shareSpan.classList.add('colorLink');
@@ -328,7 +336,7 @@ const buildPopup = async (url, color, sortedIds) => {
       shareSpan.classList.add('macos');
     }
     li.appendChild(shareSpan);
-    
+
     shareSpan.addEventListener('click', async (event) => {
       try {
         let [tab] = await browser.tabs.query({ active: true, currentWindow: true });
@@ -340,7 +348,7 @@ const buildPopup = async (url, color, sortedIds) => {
         console.error('Fail to get the current tab:', error.message);
       }
     });
-    
+
     // Btn to find the item
     const findSpan = document.createElement('span');
     findSpan.classList.add('colorFind');
@@ -348,7 +356,7 @@ const buildPopup = async (url, color, sortedIds) => {
       findSpan.classList.add('macos');
     }
     li.appendChild(findSpan);
-    
+
     findSpan.addEventListener('click', async (event) => {
       const target = event.target.closest('li');
       if (target) {
@@ -370,10 +378,12 @@ const buildPopup = async (url, color, sortedIds) => {
       bulletColorInput.type = 'color';
       bulletColorInput.value = markedText.color;
       bulletColorInput.classList.add('colorBullet');
+
       bulletColorInput.addEventListener('change', colorPickerChangeHandler);
       bulletColorInput.addEventListener('click', (event) => {
         findSpan.click();
       });
+
       li.appendChild(bulletColorInput);
     }
     
@@ -392,7 +402,6 @@ const buildPopup = async (url, color, sortedIds) => {
       // send to content.js to remove all marks
       const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
       await browser.tabs.sendMessage(tab.id, { type: 'removeAllColorMarks' });
-
     } catch (error) {
       console.error('Failed to clear all marks:', error);
     }
@@ -409,12 +418,12 @@ const initializePopup = async () => {
     const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
     const defaultColor = await getDefaultColor();
     const tabUrl = normalizeUrl(tab.url);
-  
+
     const response = await browser.tabs.sendMessage(tab.id, {
       type: 'addColorMark',
       color: defaultColor
     });
-    
+
     const sortedIds = (response && response.sortedIds) ? response.sortedIds : [];
 
     await buildPopup(tabUrl, defaultColor, sortedIds);
