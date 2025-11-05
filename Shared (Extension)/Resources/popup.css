@@ -13,10 +13,9 @@ html {
 }
 
 body {
-  width: 400px; /* for iPad Popover */
+  width: 452px;
   margin: 0;
   padding: 15px 0;
-  font-size: 94%;
   background-color: rgb(240 242 242);
   font-family: system-ui;
 }
@@ -72,7 +71,7 @@ main > ul {
   padding: 0;
   margin: 0 15px 15px;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 15px;
 }
 
 main > ul > li {
