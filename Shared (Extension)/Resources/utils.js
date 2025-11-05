@@ -5,14 +5,16 @@
 //  Created by Hiroyuki KITAGO on 2025/01/20.
 //
 
+export const isIOS = () => {
+  return /iPhone|iPod/.test(navigator.userAgent);
+};
+
+export const isIPadOS = () => {
+  return navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1;
+};
+
 export const isMacOS = () => {
-  const isPlatformMac = navigator.platform.toLowerCase().indexOf('mac') !== -1;
-
-  const isUserAgentMac = /Mac/.test(navigator.userAgent) &&
-                         !/iPhone/.test(navigator.userAgent) &&
-                         !/iPad/.test(navigator.userAgent);
-
-  return (isPlatformMac || isUserAgentMac) && !('ontouchend' in document);
+  return navigator.platform.includes('Mac') && !isIPadOS();
 };
 
 export const saveDefaultColor = async (newColor) => {
