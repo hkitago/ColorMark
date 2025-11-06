@@ -24,6 +24,12 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 
 ## Version History
 
+### 1.2.2 - 2025-11-07
+
+#### **Common**
+
+- Updated for the latest OS with new user interface and theme-optimized icons
+
 ### 1.2.1 - 2025-04-11
 
 #### **Common**
