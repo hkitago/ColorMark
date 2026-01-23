@@ -1,4 +1,6 @@
 (() => {
+  let savedScroll = null; // to restore scroll position
+
   const normalizeUrl = (url) => {
     try {
       let u = new URL(url);
@@ -225,15 +227,33 @@
     const matches = bodyText.match(regex);
     return matches ? matches.length > 1 : false;
   };
-  
+    
+  const findScrollContainer = (el) => {
+    let node = el.parentElement;
+    while (node) {
+      const style = getComputedStyle(node);
+      if (/(auto|scroll)/.test(style.overflowY)) {
+        return node;
+      }
+      node = node.parentElement;
+    }
+    return document.scrollingElement;
+  };
+
   const scrollToMark = (dataId) => {
     const targetNode = document.querySelector(`[data-id="${dataId}"]`);
-    if (targetNode) {
-      const blockPosition = /iPhone/.test(navigator.userAgent) ? 'start' : 'center';
-      targetNode.scrollIntoView({ behavior: 'smooth', block: blockPosition });
-    } else {
-      console.warn(`Node with data-id="${dataId}" not found`);
+    if (!targetNode) return;
+    
+    const container = findScrollContainer(targetNode);
+    if (!savedScroll) {
+      savedScroll = {
+        container,
+        top: container.scrollTop
+      };
     }
+
+    const blockPosition = /iPhone/.test(navigator.userAgent) ? 'start' : 'center';
+    targetNode.scrollIntoView({ behavior: 'smooth', block: blockPosition });
   }
 
   const removeAllColorMarks = () => {
@@ -246,21 +266,57 @@
     });
   };
   
+  document.addEventListener('visibilitychange', async () => {
+    if (document.visibilityState !== 'visible') return;
+
+    removeAllColorMarks();
+    initializeContent();
+  });
+
   /* GET MESSAGE */
   browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
+    if (request.type === 'RESTORE_SCROLL') {
+      if (!savedScroll || !savedScroll.container) {
+        console.warn('[ColorMarkExtension] No saved scroll position to restore');
+        return;
+      }
+
+      const { container, top } = savedScroll;
+
+      try {
+        if (
+          container === document.scrollingElement ||
+          container === document.documentElement ||
+          container === document.body
+        ) {
+          window.scrollTo({
+            top,
+            behavior: 'smooth'
+          });
+        } else {
+          container.scrollTo({
+            top,
+            behavior: 'smooth'
+          });
+        }
+      } catch (error) {
+        console.error('[ColorMarkExtension] Failed to restore scroll position:', error);
+      }
+      
+      savedScroll = null;
+      
+      return;
+    }
+
     if (request.type === 'scrollToMark') {
       scrollToMark(request.dataId);
       
       return;
     }
 
-    if (request.type === 'removeAllColorMarks' || request.type === 'syncColorMark') {
+    if (request.type === 'removeAllColorMarks') {
       removeAllColorMarks();
       
-      if (request.type === 'syncColorMark') {
-        initializeContent();
-      }
-
       return;
     }
 
@@ -566,7 +622,7 @@
         applyHighlightMark(mark);
       }
     } catch (error) {
-      console.error('Failed to initialize highlights:', error);
+      console.error('[ColorMarkExtension] Failed to initialize highlights:', error);
     }
   };
 

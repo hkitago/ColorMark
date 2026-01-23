@@ -157,19 +157,45 @@ main > ul > li.hover > span.colorLink.macos {
 
 footer {
   margin: 0 15px 5px;
+  display: flex;
+  justify-content: space-between;
 }
 
-footer > div {
+footer > ul {
+  width: 100%;
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+footer > ul > li {
+  min-width: 50%;
+  display: flex;
+}
+
+footer > ul > li:nth-child(even) {
+  justify-content: flex-end;
+}
+
+footer > ul > li > div {
   margin: 0 20px;
   cursor: pointer;
   color: rgb(70 146 254);
+  white-space: nowrap;
 }
 
-footer > div.hover {
+footer > ul > li > div.hover,
+footer > ul > li > div.active {
   opacity: 0.5;
 }
 
 #clearAllMarks {
+  display: none;
+}
+
+#restoreScrollPosition {
   display: none;
 }
 
