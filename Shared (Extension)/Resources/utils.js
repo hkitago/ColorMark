@@ -17,17 +17,19 @@ export const isMacOS = () => {
   return navigator.platform.includes('Mac') && !isIPadOS();
 };
 
+export const isValidHexColor = (s) => {
+  return typeof s === 'string' && /^#([0-9a-f]{3}|[0-9a-f]{6}|[0-9a-f]{8})$/i.test(s);
+};
+
 export const saveDefaultColor = async (newColor) => {
-  if (!newColor) {
-    throw new Error('Color value is required');
-  }
-  
+  if (!isValidHexColor(newColor)) return { ok: false, reason: 'invalid-argument' };
+
   try {
     await browser.storage.local.set({ defaultColor: newColor });
-    return true;
+    return { ok: true };
   } catch (error) {
-    console.error("Fail to save default color to storage:", error);
-    throw error;
+    console.error('[ColorMarkExtension] Failed to save default color to storage:', error);
+    return { ok: false, reason: 'storage-error' };
   }
 };
 
@@ -42,7 +44,7 @@ export const getDefaultColor = async () => {
       return color;
     }
   } catch (error) {
-    console.error('Error retrieving default color from storage:', error);
+    console.error('[ColorMarkExtension] Error retrieving default color from storage:', error);
   } finally {
     if (color === DEFAULT_COLOR) {
       await saveDefaultColor(DEFAULT_COLOR);
