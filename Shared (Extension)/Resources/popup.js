@@ -62,36 +62,6 @@ const isBlockElement = (htmlString) => {
   return blockElementRegex.test(htmlString);
 };
 
-//const formatHtmlWithBreaks = (htmlString) => {
-//  const container = document.createElement('div');
-//  container.innerHTML = htmlString;
-//
-//  const extractTextWithBreaks = (node) => {
-//    let textContent = '';
-//
-//    for (const child of node.childNodes) {
-//      if (child.nodeType === Node.TEXT_NODE) {
-//        textContent += child.textContent.trim();
-//      } else if (child.nodeType === Node.ELEMENT_NODE) {
-//        const tagName = child.tagName.toLowerCase();
-//
-//        if (isBlockElement(`<${tagName}>`)) {
-//          textContent += '\n' + extractTextWithBreaks(child) + '\n';
-//        } else {
-//          textContent += extractTextWithBreaks(child);
-//        }
-//      }
-//    }
-//
-//    return textContent;
-//  };
-//
-//  let finalText = extractTextWithBreaks(container);
-//  finalText = finalText.replace(/\n\s*\n/g, '\n').trim();
-//
-//  return finalText.replace(/\n/g, '<br>');
-//};
-
 const constructFragmentUrl = (tabUrl, markedText) => {
   const url = normalizeUrl(tabUrl);
 
@@ -277,12 +247,12 @@ const buildPopup = async (url, color, sortedIds) => {
   const scrollToMark = async (id) => {
     if (!id) return;
     
-    restoreScrollPosition.style.display = 'inline-block';
-    
     try {
       const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
       if (tab?.id) {
-        await browser.tabs.sendMessage(tab.id, { type: 'scrollToMark', dataId: id });
+        const response = await browser.tabs.sendMessage(tab.id, { type: 'scrollToMark', dataId: id });
+        const styleDisplay = response.success ? 'none' : 'inline-block';
+        restoreScrollPosition.style.display = styleDisplay;
       }
     } catch (error) {
       console.error('[ColorMarkExtension] Fail to scroll to the mark:', error);
@@ -369,8 +339,6 @@ const buildPopup = async (url, color, sortedIds) => {
     
     // Display text content
     const div = document.createElement('div');
-    //    const formattedHtml = isBlockElement(markedText.html) ? formatHtmlWithBreaks(markedText.html) : markedText.text;
-    //    div.innerHTML = formattedHtml;
     div.textContent = markedText.text;
     
     li.appendChild(div);
@@ -450,7 +418,6 @@ const buildPopup = async (url, color, sortedIds) => {
       await browser.storage.local.remove(url);
       showOnError(ul, clearAllMarks, restoreScrollPosition);
       
-      // send to content.js to remove all marks
       const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
       if (tab?.id) {
         await browser.tabs.sendMessage(tab.id, { type: 'removeAllColorMarks' });
@@ -471,10 +438,10 @@ const buildPopup = async (url, color, sortedIds) => {
   clearAllMarks.addEventListener('touchcancel', (event) => {
     event.target.classList.remove('active');
   });
-  
+
+  restoreScrollPosition.textContent = getCurrentLangLabelString('restoreScrollPosition');
   restoreScrollPosition.addEventListener('click', async () => {
     try {
-      // send to content.js to scroll default position
       const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
       if (tab?.id) {
         await browser.tabs.sendMessage(tab.id, { type: 'RESTORE_SCROLL' });
@@ -531,4 +498,3 @@ if (document.readyState === 'loading') {
 } else {
   initializePopup();
 }
-
