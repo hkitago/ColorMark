@@ -7,7 +7,7 @@
       u.hash = u.hash.includes('~:text=') ? '' : u.hash;
       return u.toString();
     } catch (error) {
-        console.error('Invalid URL:', url);
+        console.warn('[ColorMarkExtension] Invalid URL:', url);
         return url;
     }
   };
@@ -218,16 +218,6 @@
     return { prefix, suffix };
   };
 
-  const isTextDuplicateInPage = (text) => {
-    const bodyText = document.body.innerText.replace(/[\u200E\u200F\u202A-\u202E]/g, '').replace(/\s+/g, ' ').trim();
-    const normalizedText = text.replace(/[\u200E\u200F\u202A-\u202E]/g, '').replace(/\s+/g, ' ').trim();
-
-    const regex = new RegExp(normalizedText.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
-
-    const matches = bodyText.match(regex);
-    return matches ? matches.length > 1 : false;
-  };
-    
   const findScrollContainer = (el) => {
     let node = el.parentElement;
     while (node) {
@@ -240,11 +230,12 @@
     return document.scrollingElement;
   };
 
-  const scrollToMark = (dataId) => {
+  const scrollToMark = async (dataId) => {
     const targetNode = document.querySelector(`[data-id="${dataId}"]`);
     if (!targetNode) return;
     
     const container = findScrollContainer(targetNode);
+
     if (!savedScroll) {
       savedScroll = {
         container,
@@ -254,6 +245,23 @@
 
     const blockPosition = /iPhone/.test(navigator.userAgent) ? 'start' : 'center';
     targetNode.scrollIntoView({ behavior: 'smooth', block: blockPosition });
+
+    await new Promise((resolve) => {
+      let timeoutId;
+      
+      const handleScrollEnd = () => {
+        clearTimeout(timeoutId);
+        resolve();
+      };
+      
+      container.addEventListener('scrollend', handleScrollEnd, { once: true });
+      timeoutId = setTimeout(() => {
+        container.removeEventListener('scrollend', handleScrollEnd);
+        resolve();
+      }, 1000); // Fallback
+    });
+
+    return savedScroll.top === container.scrollTop;
   }
 
   const removeAllColorMarks = () => {
@@ -277,7 +285,7 @@
   browser.runtime.onMessage.addListener(async (request, sender, sendResponse) => {
     if (request.type === 'RESTORE_SCROLL') {
       if (!savedScroll || !savedScroll.container) {
-        console.warn('[ColorMarkExtension] No saved scroll position to restore');
+        console.error('[ColorMarkExtension] No saved scroll position to restore.');
         return;
       }
 
@@ -309,9 +317,13 @@
     }
 
     if (request.type === 'scrollToMark') {
-      scrollToMark(request.dataId);
-      
-      return;
+      const result = await scrollToMark(request.dataId);
+
+      sendResponse({
+        success: result,
+      });
+
+      return true;
     }
 
     if (request.type === 'removeAllColorMarks') {
@@ -347,6 +359,7 @@
     }
 
     if (request.type === 'addColorMark') {
+      savedScroll = null;
       const selection = window.getSelection();
 
       if (selection.rangeCount === 0 || !selection.toString().trim()) {
@@ -369,7 +382,6 @@
       const id = generateUUID();
 
       const { prefix, suffix } = getPrefixAndSuffix(range);
-      const isDuplicate = isTextDuplicateInPage(serialized.text);
 
       const result = await browser.storage.local.get(url);
       const colorMarks = result[url] || [];
@@ -382,7 +394,6 @@
           prefix: prefix,
           suffix: suffix,
           color: defaultColor,
-          isDuplicate: isDuplicate
         });
         await browser.storage.local.set({ [url]: colorMarks });
       }
