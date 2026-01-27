@@ -22,7 +22,6 @@ html {
 
 body {
   display: flex;
-  align-items: center;
   justify-content: center;
   flex-direction: column;
   
@@ -43,6 +42,10 @@ body {
 
 body:not(.platform-mac, .platform-ios) :is(.platform-mac, .platform-ios) {
     display: none;
+}
+
+body:not(.platform-mac) {
+  align-items: center;
 }
 
 body.platform-ios .platform-mac {
@@ -70,24 +73,34 @@ body.state-off :is(.state-on, .state-unknown) {
 }
 
 button {
-    font-size: 1em;
-    white-space: nowrap;
-    overflow: hidden;
+  -webkit-appearance: none;
+  border-width: 0;
+  background-color: rgb(59 134 246);
+  color: white;
+  min-width: 80vw;
+  border-radius: 25px;
+  padding: 10px 0;
+  font-size: 1em;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
 }
 
-@media (hover: hover) and (pointer: fine) {
-  button:hover {
-    opacity: 0.5;
-    cursor: pointer;
-  }
-}
-
-body.platform-ios button {
-  min-width: 50vw;
+button.active,
+button:active {
+  background-color: rgb(209 209 213);
 }
 
 body.platform-mac button {
   min-width: 70vw;
+  border-radius: 6px;
+  padding: 5px 0;
+  background-color: rgb(52 120 246);
+}
+
+body.platform-mac button:active,
+body.platform-mac button:focus {
+  background-color: rgb(47 108 222);
 }
 
 p {
@@ -96,7 +109,7 @@ p {
 }
 
 body.platform-ios p {
-  width: 70vw;
+  width: 80vw;
 }
 
 body.platform-mac p {
@@ -104,15 +117,31 @@ body.platform-mac p {
 }
 
 #app-icon {
-  width: 128px;
-  height: 128px;
+  width: 96px;
+  height: 96px;
   background-size: contain;
   background-repeat: no-repeat;
   background-image: url(icon-default.png);
 }
 
+body:not(.platform-mac) #app-icon {
+  width: 128px;
+  height: 128px;
+}
+
 @media (prefers-color-scheme: dark) {
   #app-icon {
     background-image: url(icon-dark.png);
+  }
+}
+
+@supports (-apple-visual-effect: -apple-system-glass-material) {
+  html {
+    background: transparent;
+    -apple-visual-effect: -apple-system-glass-material;
+  }
+  
+  body {
+    background: transparent;
   }
 }
