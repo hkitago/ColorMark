@@ -10,6 +10,7 @@ const labelStrings = {
     "contextMenu": "ColorMark",
     "onError": "There are no color marks.",
     "clearAllMarks": "Clear All Marks",
+    "restoreScrollPosition": "Restore Scroll Position",
     "defaultColor": "Default Mark",
     "editDone": "Done",
     "tooltip": {
@@ -22,6 +23,7 @@ const labelStrings = {
     "contextMenu": "علامة اللون",
     "onError": "لا توجد علامات ألوان.",
     "clearAllMarks": "مسح كل العلامات",
+    "restoreScrollPosition": "استعادة موضع التمرير",
     "defaultColor": "العلامة الافتراضية",
     "editDone": "تم",
     "tooltip": {
@@ -34,6 +36,7 @@ const labelStrings = {
     "contextMenu": "علامة اللون",
     "onError": "لا توجد علامات ألوان.",
     "clearAllMarks": "مسح كل العلامات",
+    "restoreScrollPosition": "استعادة موضع التمرير",
     "defaultColor": "العلامة الافتراضية",
     "editDone": "تم",
     "tooltip": {
@@ -46,6 +49,7 @@ const labelStrings = {
     "contextMenu": "MarcaColor",
     "onError": "No hi ha marques de color.",
     "clearAllMarks": "Esborrar totes les marques",
+    "restoreScrollPosition": "Restaurar la posició de desplaçament",
     "defaultColor": "Marca predeterminada",
     "editDone": "Fet",
     "tooltip": {
@@ -58,6 +62,7 @@ const labelStrings = {
     "contextMenu": "BarevneOznaceni",
     "onError": "Nejsou zde žádná barevná označení.",
     "clearAllMarks": "Vymazat všechna označení",
+    "restoreScrollPosition": "Obnovit polohu posunutí",
     "defaultColor": "Výchozí označení",
     "editDone": "Hotovo",
     "tooltip": {
@@ -70,6 +75,7 @@ const labelStrings = {
     "contextMenu": "FarveMærke",
     "onError": "Der er ingen farvemærker.",
     "clearAllMarks": "Ryd alle mærker",
+    "restoreScrollPosition": "Gendan rulleposition",
     "defaultColor": "Standard mærke",
     "editDone": "Færdig",
     "tooltip": {
@@ -82,6 +88,7 @@ const labelStrings = {
     "contextMenu": "FarbMarkierung",
     "onError": "Es gibt keine Farbmarkierungen.",
     "clearAllMarks": "Alle Markierungen löschen",
+    "restoreScrollPosition": "Scrollposition wiederherstellen",
     "defaultColor": "Standardmarkierung",
     "editDone": "Fertig",
     "tooltip": {
@@ -94,6 +101,7 @@ const labelStrings = {
     "contextMenu": "ΧρωματικήΣήμανση",
     "onError": "Δεν υπάρχουν χρωματικές σημάνσεις.",
     "clearAllMarks": "Διαγραφή όλων των σημάνσεων",
+    "restoreScrollPosition": "Επαναφορά θέσης κύλισης",
     "defaultColor": "Προεπιλεγμένη σήμανση",
     "editDone": "Έγινε",
     "tooltip": {
@@ -106,6 +114,7 @@ const labelStrings = {
     "contextMenu": "ColourMark",
     "onError": "There are no colour marks.",
     "clearAllMarks": "Clear All Marks",
+    "restoreScrollPosition": "Restore Scroll Position",
     "defaultColor": "Default Mark",
     "editDone": "Done",
     "tooltip": {
@@ -118,6 +127,7 @@ const labelStrings = {
     "contextMenu": "ColorMark",
     "onError": "There are no color marks.",
     "clearAllMarks": "Clear All Marks",
+    "restoreScrollPosition": "Restore Scroll Position",
     "defaultColor": "Default Mark",
     "editDone": "Done",
     "tooltip": {
@@ -130,6 +140,7 @@ const labelStrings = {
     "contextMenu": "ColourMark",
     "onError": "There are no colour marks.",
     "clearAllMarks": "Clear All Marks",
+    "restoreScrollPosition": "Restore Scroll Position",
     "defaultColor": "Default Mark",
     "editDone": "Done",
     "tooltip": {
@@ -142,6 +153,7 @@ const labelStrings = {
     "contextMenu": "MarcaColor",
     "onError": "No hay marcas de color.",
     "clearAllMarks": "Borrar todas las marcas",
+    "restoreScrollPosition": "Restaurar posición de desplazamiento",
     "defaultColor": "Marca predeterminada",
     "editDone": "Hecho",
     "tooltip": {
@@ -154,6 +166,7 @@ const labelStrings = {
     "contextMenu": "MarcaColor",
     "onError": "No hay marcas de color.",
     "clearAllMarks": "Borrar todas las marcas",
+    "restoreScrollPosition": "Restaurar posición de desplazamiento",
     "defaultColor": "Marca predeterminada",
     "editDone": "Hecho",
     "tooltip": {
@@ -166,6 +179,7 @@ const labelStrings = {
     "contextMenu": "VäriMerkintä",
     "onError": "Ei värimerkintöjä.",
     "clearAllMarks": "Poista kaikki merkinnät",
+    "restoreScrollPosition": "Palauta vierityskohta",
     "defaultColor": "Oletusmerkintä",
     "editDone": "Valmis",
     "tooltip": {
@@ -178,6 +192,7 @@ const labelStrings = {
     "contextMenu": "MarqueCouleur",
     "onError": "Il n'y a pas de marques de couleur.",
     "clearAllMarks": "Effacer toutes les marques",
+    "restoreScrollPosition": "Rétablir la position de défilement",
     "defaultColor": "Marque par défaut",
     "editDone": "Terminé",
     "tooltip": {
@@ -190,6 +205,7 @@ const labelStrings = {
     "contextMenu": "MarqueCouleur",
     "onError": "Il n'y a pas de marques de couleur.",
     "clearAllMarks": "Effacer toutes les marques",
+    "restoreScrollPosition": "Rétablir la position de défilement",
     "defaultColor": "Marque par défaut",
     "editDone": "Terminé",
     "tooltip": {
@@ -202,6 +218,7 @@ const labelStrings = {
     "contextMenu": "סימוןצבע",
     "onError": "אין סימוני צבע.",
     "clearAllMarks": "מחק את כל הסימונים",
+    "restoreScrollPosition": "שחזר מיקום גליلة",
     "defaultColor": "סימון ברירת מחדל",
     "editDone": "סיים",
     "tooltip": {
@@ -214,6 +231,7 @@ const labelStrings = {
     "contextMenu": "रंगचिह्न",
     "onError": "कोई रंग चिह्न नहीं हैं।",
     "clearAllMarks": "सभी चिह्न मिटाएं",
+    "restoreScrollPosition": "स्क्रॉल स्थिति पुनर्स्थापित करें",
     "defaultColor": "डिफ़ॉल्ट चिह्न",
     "editDone": "पूर्ण",
     "tooltip": {
@@ -226,6 +244,7 @@ const labelStrings = {
     "contextMenu": "OznakaBoje",
     "onError": "Nema oznaka u boji.",
     "clearAllMarks": "Izbriši sve oznake",
+    "restoreScrollPosition": "Vrati položaj pomicanja",
     "defaultColor": "Zadana oznaka",
     "editDone": "Gotovo",
     "tooltip": {
@@ -238,6 +257,7 @@ const labelStrings = {
     "contextMenu": "SzínJelölés",
     "onError": "Nincsenek színes jelölések.",
     "clearAllMarks": "Összes jelölés törlése",
+    "restoreScrollPosition": "Görgetési pozíció visszaállítása",
     "defaultColor": "Alapértelmezett jelölés",
     "editDone": "Kész",
     "tooltip": {
@@ -250,6 +270,7 @@ const labelStrings = {
     "contextMenu": "TandaWarna",
     "onError": "Tidak ada tanda warna.",
     "clearAllMarks": "Hapus Semua Tanda",
+    "restoreScrollPosition": "Pulihkan Posisi Gulir",
     "defaultColor": "Tanda Default",
     "editDone": "Selesai",
     "tooltip": {
@@ -262,6 +283,7 @@ const labelStrings = {
     "contextMenu": "MarcaColore",
     "onError": "Non ci sono marcature colorate.",
     "clearAllMarks": "Cancella tutte le marcature",
+    "restoreScrollPosition": "Ripristina posizione scorrimento",
     "defaultColor": "Marcatura predefinita",
     "editDone": "Fatto",
     "tooltip": {
@@ -274,6 +296,7 @@ const labelStrings = {
     "contextMenu": "カラーマーク",
     "onError": "マークはありません。",
     "clearAllMarks": "マークをすべて消去",
+    "restoreScrollPosition": "スクロール位置を復元",
     "defaultColor": "マークの初期色",
     "editDone": "完了",
     "tooltip": {
@@ -286,6 +309,7 @@ const labelStrings = {
     "contextMenu": "색상표시",
     "onError": "색상 표시가 없습니다.",
     "clearAllMarks": "모든 표시 지우기",
+    "restoreScrollPosition": "스크롤 위치 복원",
     "defaultColor": "기본 표시",
     "editDone": "완료",
     "tooltip": {
@@ -298,6 +322,7 @@ const labelStrings = {
     "contextMenu": "TandaWarna",
     "onError": "Tiada tanda warna.",
     "clearAllMarks": "Padam Semua Tanda",
+    "restoreScrollPosition": "Pulihkan Kedudukan Skrol",
     "defaultColor": "Tanda Lalai",
     "editDone": "Selesai",
     "tooltip": {
@@ -310,6 +335,7 @@ const labelStrings = {
     "contextMenu": "FargeMerking",
     "onError": "Det er ingen fargemerker.",
     "clearAllMarks": "Fjern alle merker",
+    "restoreScrollPosition": "Gjenopprett rulleposisjon",
     "defaultColor": "Standard merke",
     "editDone": "Ferdig",
     "tooltip": {
@@ -322,6 +348,7 @@ const labelStrings = {
     "contextMenu": "KleurMarkering",
     "onError": "Er zijn geen kleurmarkeringen.",
     "clearAllMarks": "Alle markeringen wissen",
+    "restoreScrollPosition": "Herstel scrollpositie",
     "defaultColor": "Standaard markering",
     "editDone": "Klaar",
     "tooltip": {
@@ -334,6 +361,7 @@ const labelStrings = {
     "contextMenu": "OznaczenieKolorem",
     "onError": "Brak kolorowych oznaczeń.",
     "clearAllMarks": "Usuń wszystkie oznaczenia",
+    "restoreScrollPosition": "Przywróć pozycję przewijania",
     "defaultColor": "Domyślne oznaczenie",
     "editDone": "Gotowe",
     "tooltip": {
@@ -346,6 +374,7 @@ const labelStrings = {
     "contextMenu": "MarcaCor",
     "onError": "Não há marcas de cor.",
     "clearAllMarks": "Limpar todas as marcas",
+    "restoreScrollPosition": "Restaurar posição de rolagem",
     "defaultColor": "Marca padrão",
     "editDone": "Concluído",
     "tooltip": {
@@ -358,6 +387,7 @@ const labelStrings = {
     "contextMenu": "MarcaCor",
     "onError": "Não há marcas de cor.",
     "clearAllMarks": "Limpar todas as marcas",
+    "restoreScrollPosition": "Restaurar posição de deslocamento",
     "defaultColor": "Marca padrão",
     "editDone": "Concluído",
     "tooltip": {
@@ -370,6 +400,7 @@ const labelStrings = {
     "contextMenu": "MarcaCor",
     "onError": "Não há marcas de cor.",
     "clearAllMarks": "Limpar todas as marcas",
+    "restoreScrollPosition": "Restaurar posição de rolagem",
     "defaultColor": "Marca padrão",
     "editDone": "Concluído",
     "tooltip": {
@@ -382,6 +413,7 @@ const labelStrings = {
     "contextMenu": "MarcajCuloare",
     "onError": "Nu există marcaje color.",
     "clearAllMarks": "Șterge toate marcajele",
+    "restoreScrollPosition": "Restabilire poziție defilare",
     "defaultColor": "Marcaj implicit",
     "editDone": "Finalizat",
     "tooltip": {
@@ -394,6 +426,7 @@ const labelStrings = {
     "contextMenu": "ЦветнаяМетка",
     "onError": "Нет цветных меток.",
     "clearAllMarks": "Удалить все метки",
+    "restoreScrollPosition": "Восстановить позицию прокрутки",
     "defaultColor": "Метка по умолчанию",
     "editDone": "Готово",
     "tooltip": {
@@ -406,6 +439,7 @@ const labelStrings = {
     "contextMenu": "FärgMarkering",
     "onError": "Det finns inga färgmarkeringar.",
     "clearAllMarks": "Ta bort alla markeringar",
+    "restoreScrollPosition": "Återställ rullningsläge",
     "defaultColor": "Standardmarkering",
     "editDone": "Klar",
     "tooltip": {
@@ -418,6 +452,7 @@ const labelStrings = {
     "contextMenu": "FarebneOznacenie",
     "onError": "Žiadne farebné označenia.",
     "clearAllMarks": "Vymazať všetky označenia",
+    "restoreScrollPosition": "Obnoviť polohu posunu",
     "defaultColor": "Predvolené označenie",
     "editDone": "Hotovo",
     "tooltip": {
@@ -430,6 +465,7 @@ const labelStrings = {
     "contextMenu": "เครื่องหมายสี",
     "onError": "ไม่มีเครื่องหมายสี",
     "clearAllMarks": "ลบเครื่องหมายทั้งหมด",
+    "restoreScrollPosition": "กู้คืนตำแหน่งการเลื่อน",
     "defaultColor": "เครื่องหมายเริ่มต้น",
     "editDone": "เสร็จสิ้น",
     "tooltip": {
@@ -442,6 +478,7 @@ const labelStrings = {
     "contextMenu": "RenkIsareti",
     "onError": "Renk işareti yok.",
     "clearAllMarks": "Tüm İşaretleri Temizle",
+    "restoreScrollPosition": "Kaydırma Konumunu Geri Yükle",
     "defaultColor": "Varsayılan İşaret",
     "editDone": "Tamam",
     "tooltip": {
@@ -454,6 +491,7 @@ const labelStrings = {
     "contextMenu": "КольороваМітка",
     "onError": "Немає кольорових міток.",
     "clearAllMarks": "Видалити всі мітки",
+    "restoreScrollPosition": "Відновити позицію прокрутки",
     "defaultColor": "Мітка за замовчуванням",
     "editDone": "Готово",
     "tooltip": {
@@ -466,6 +504,7 @@ const labelStrings = {
     "contextMenu": "DanhDauMau",
     "onError": "Không có dấu màu.",
     "clearAllMarks": "Xóa tất cả dấu",
+    "restoreScrollPosition": "Khôi phục vị trí cuộn",
     "defaultColor": "Dấu mặc định",
     "editDone": "Xong",
     "tooltip": {
@@ -478,6 +517,7 @@ const labelStrings = {
     "contextMenu": "颜色标记",
     "onError": "没有颜色标记。",
     "clearAllMarks": "清除所有标记",
+    "restoreScrollPosition": "恢复滚动位置",
     "defaultColor": "默认标记",
     "editDone": "完成",
     "tooltip": {
@@ -490,6 +530,7 @@ const labelStrings = {
     "contextMenu": "颜色标记",
     "onError": "没有颜色标记。",
     "clearAllMarks": "清除所有标记",
+    "restoreScrollPosition": "恢复滚动位置",
     "defaultColor": "默认标记",
     "editDone": "完成",
     "tooltip": {
@@ -502,6 +543,7 @@ const labelStrings = {
     "contextMenu": "顏色標記",
     "onError": "沒有顏色標記。",
     "clearAllMarks": "清除所有標記",
+    "restoreScrollPosition": "恢復捲動位置",
     "defaultColor": "預設標記",
     "editDone": "完成",
     "tooltip": {
@@ -514,6 +556,7 @@ const labelStrings = {
     "contextMenu": "顏色標記",
     "onError": "沒有顏色標記。",
     "clearAllMarks": "清除所有標記",
+    "restoreScrollPosition": "恢復捲動位置",
     "defaultColor": "預設標記",
     "editDone": "完成",
     "tooltip": {
