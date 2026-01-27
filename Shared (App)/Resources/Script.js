@@ -437,11 +437,23 @@ function openSettings() {
     webkit.messageHandlers.controller.postMessage("open-settings");
 }
 
-document.querySelector("button.open-preferences").addEventListener("click", openPreferences);
-document.querySelector("button.open-settings").addEventListener("click", openSettings);
 
 function openSupport() {
     webkit.messageHandlers.controller.postMessage("open-support");
 }
 
-document.querySelector("button.support-button").addEventListener("click", openSupport);
+const initializeScript = async () => {
+  try {
+    document.querySelector("button.open-preferences").addEventListener("click", openPreferences);
+    document.querySelector("button.open-settings").addEventListener("click", openSettings);
+    document.querySelector("button.support-button").addEventListener("click", openSupport);
+  } catch (error) {
+    console.error('[ColorMarkExtension] Fail to initialize:', error);
+  }
+};
+
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', initializeScript, { once: true });
+} else {
+  initializeScript();
+}
