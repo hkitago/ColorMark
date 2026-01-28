@@ -1,5 +1,6 @@
 (() => {
   let savedScroll = null; // to restore scroll position
+  const SCROLL_THRESHOLD = 5;
 
   const normalizeUrl = (url) => {
     try {
@@ -239,7 +240,7 @@
     if (!savedScroll) {
       savedScroll = {
         container,
-        top: container.scrollTop
+        top: Math.round(container.scrollTop)
       };
     }
 
@@ -261,7 +262,7 @@
       }, 1000); // Fallback
     });
 
-    return savedScroll.top === container.scrollTop;
+    return Math.abs(savedScroll.top - container.scrollTop) <= SCROLL_THRESHOLD;
   }
 
   const removeAllColorMarks = () => {
