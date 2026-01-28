@@ -22,14 +22,14 @@ export const isValidHexColor = (s) => {
 };
 
 export const saveDefaultColor = async (newColor) => {
-  if (!isValidHexColor(newColor)) return { ok: false, reason: 'invalid-argument' };
+  if (!isValidHexColor(newColor)) return { success: false, reason: 'invalid-argument' };
 
   try {
     await browser.storage.local.set({ defaultColor: newColor });
-    return { ok: true };
+    return { success: true };
   } catch (error) {
     console.error('[ColorMarkExtension] Failed to save default color to storage:', error);
-    return { ok: false, reason: 'storage-error' };
+    return { success: false, reason: 'storage-error' };
   }
 };
 
@@ -44,7 +44,7 @@ export const getDefaultColor = async () => {
       return color;
     }
   } catch (error) {
-    console.error('[ColorMarkExtension] Error retrieving default color from storage:', error);
+    console.error('[ColorMarkExtension] Failed to retrieve default color from storage:', error);
   } finally {
     if (color === DEFAULT_COLOR) {
       await saveDefaultColor(DEFAULT_COLOR);

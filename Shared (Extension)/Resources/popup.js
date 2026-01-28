@@ -13,7 +13,7 @@ const normalizeUrl = (url) => {
 };
 
 const updateMarkedColor = async (newColor, id, url) => {
-  if (!isValidHexColor(newColor) || !id || !url) return { ok: false, reason: 'invalid-argument' };
+  if (!isValidHexColor(newColor) || !id || !url) return { success: false, reason: 'invalid-argument' };
 
   try {
     const result = await browser.storage.local.get(url);
@@ -30,10 +30,10 @@ const updateMarkedColor = async (newColor, id, url) => {
     });
 
     await browser.storage.local.set({ [url]: updatedMarkedTexts });
-    return { ok: true };
+    return { success: true };
   } catch (error) {
-    console.error('[ColorMarkExtension] Fail to update the marked color to storage:', error);
-    return { ok: false, reason: 'storage-error' };
+    console.error('[ColorMarkExtension] Failed to update the marked color to storage:', error);
+    return { success: false, reason: 'storage-error' };
   }
 };
 
@@ -165,7 +165,7 @@ const buildPopup = async (url, color, sortedIds) => {
 
     bulletTarget.style.backgroundColor = newColor;
 
-    let saveResult = { ok: true };
+    let saveResult = { success: true };
 
     try {
       if (id) {
@@ -174,7 +174,7 @@ const buildPopup = async (url, color, sortedIds) => {
         saveResult = await saveDefaultColor(newColor);
       }
 
-      if (!saveResult.ok) {
+      if (!saveResult.success) {
         bulletTarget.style.backgroundColor = previousColor;
         return;
       }
@@ -185,7 +185,7 @@ const buildPopup = async (url, color, sortedIds) => {
       }
     } catch (error) {
       bulletTarget.style.backgroundColor = previousColor;
-      console.warn('[ColorMarkExtension] Error during color update:', error);
+      console.warn('[ColorMarkExtension] Failed to updating the color:', error);
     }
   };
   
@@ -197,7 +197,7 @@ const buildPopup = async (url, color, sortedIds) => {
 
     const previousColor = input.getAttribute('value') || newColor;
 
-    let saveResult = { ok: true };
+    let saveResult = { success: true };
 
     try {
       if (id) {
@@ -206,7 +206,7 @@ const buildPopup = async (url, color, sortedIds) => {
         saveResult = await saveDefaultColor(newColor);
       }
 
-      if (!saveResult.ok) {
+      if (!saveResult.success) {
         input.value = previousColor;
         return;
       }
@@ -219,7 +219,7 @@ const buildPopup = async (url, color, sortedIds) => {
       }
     } catch (error) {
       input.value = previousColor;
-      console.warn('[ColorMarkExtension] Fail to updating the color of mark:', error);
+      console.warn('[ColorMarkExtension] Failed to updating the color of mark:', error);
     }
   };
   
@@ -231,10 +231,10 @@ const buildPopup = async (url, color, sortedIds) => {
     defaultColorBullet.value = newColor;
 
     const saveResult = await saveDefaultColor(newColor);
-    if (!saveResult.ok) {
+    if (!saveResult.success) {
       // Revert UI on failure
       defaultColorBullet.value = previousColor;
-      console.warn('[ColorMarkExtension] Error during color update:', saveResult.reason);
+      console.warn('[ColorMarkExtension] Failed to updating the color:', saveResult.reason);
     }
   };
   
@@ -255,7 +255,7 @@ const buildPopup = async (url, color, sortedIds) => {
         restoreScrollPosition.style.display = styleDisplay;
       }
     } catch (error) {
-      console.error('[ColorMarkExtension] Fail to scroll to the mark:', error);
+      console.error('[ColorMarkExtension] Failed to scroll to the mark:', error);
     }
   };
 
@@ -361,7 +361,7 @@ const buildPopup = async (url, color, sortedIds) => {
           await browser.tabs.sendMessage(tab.id, { type: 'removeColorMark', id: id });
         }
       } catch (error) {
-        console.error('[ColorMarkExtension] Fail to remove the mark:', error);
+        console.error('[ColorMarkExtension] Failed to remove the mark:', error);
       }
     });
     
@@ -390,7 +390,7 @@ const buildPopup = async (url, color, sortedIds) => {
           });
         }
       } catch (error) {
-        console.error('[ColorMarkExtension] Fail to get the current tab:', error.message);
+        console.error('[ColorMarkExtension] Failed to get the current tab:', error.message);
       }
     });
     
@@ -519,7 +519,7 @@ const initializePopup = async () => {
       await buildPopup(tabUrl, defaultColor, sortedIds);
     }
   } catch (error) {
-    console.error('[ColorMarkExtension] Fail to initialize to build the popup:', error);
+    console.error('[ColorMarkExtension] Failed to initialize to build the popup:', error);
     isInitialized = false;
   }
 };
