@@ -22,20 +22,20 @@
 
 ## **macOS** - 2025-02-19
 
-- Improve text highlighting accuracy when selecting text across multiple tags
-- Fix app names and phrasing in certain languages for localization improvements
+- Improved text highlighting accuracy when selecting text across multiple tags
+- Fixed app names and phrasing in certain languages for localization improvements
 
 ## [1.1]
 
 ## **iOS/iPadOS** - 2025-02-18
 
-- Fix the bug with link sharing to ensure consistent URL handling
-- Add support for all languages in the App Store
+- Fixed the bug with link sharing to ensure consistent URL handling
+- Added support for all languages in the App Store
 
 ## **macOS** - 2025-02-09
 
-- Improve RTL text handling and resolved display issues
-- Add support for all languages in the App Store
+- Improved RTL text handling and resolved display issues
+- Added support for all languages in the App Store
 
 ## [1.0]
 
