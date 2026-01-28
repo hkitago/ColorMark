@@ -284,7 +284,7 @@ const buildPopup = async (url, color, sortedIds) => {
       try {
         const success = await scrollToMark(dataId);
         if (success !== false) {
-           lastScrolledId = dataId;
+          lastScrolledId = dataId;
         }
       } finally {
         isScrolling = false;
@@ -437,10 +437,7 @@ const buildPopup = async (url, color, sortedIds) => {
   });
   /* FOOTER */
   clearAllMarks.textContent = getCurrentLangLabelString('clearAllMarks');
-  if (ul.children.length > 1) {
-    clearAllMarks.style.display = 'inline-block';
-  }
-  
+  clearAllMarks.title = getCurrentLangLabelString('clearAllMarks');
   clearAllMarks.addEventListener('click', async () => {
     try {
       await browser.storage.local.remove(url);
@@ -468,6 +465,7 @@ const buildPopup = async (url, color, sortedIds) => {
   });
 
   restoreScrollPosition.textContent = getCurrentLangLabelString('restoreScrollPosition');
+  restoreScrollPosition.title = getCurrentLangLabelString('restoreScrollPosition');
   restoreScrollPosition.addEventListener('click', async () => {
     try {
       const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
@@ -492,6 +490,10 @@ const buildPopup = async (url, color, sortedIds) => {
   restoreScrollPosition.addEventListener('touchcancel', (event) => {
     event.target.classList.remove('active');
   });
+
+  if (ul.children.length > 1) {
+    clearAllMarks.style.display = 'inline-block';
+  }
 };
 
 let isInitialized = false;
