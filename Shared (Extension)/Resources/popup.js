@@ -258,21 +258,48 @@ const buildPopup = async (url, color, sortedIds) => {
       console.error('[ColorMarkExtension] Fail to scroll to the mark:', error);
     }
   };
-  
+
+  let isScrolling = false;
+  let lastScrolledId = null;
+  let hoverTimeout = null;
+
   const onMouseOver = (event) => {
-    event.target.closest('li').classList.add('hover');
-    
+    event.target.closest('li')?.classList.add('hover');
+
     const target = event.target.closest('li');
-    if (target) {
-      const dataId = target.dataset.id;
-      scrollToMark(dataId);
-    }
-  }
-  
+    if (!target) return;
+    
+    const dataId = target.dataset.id;
+    
+    if (lastScrolledId === dataId) return;
+
+    clearTimeout(hoverTimeout);
+    
+    hoverTimeout = setTimeout(async () => {
+      if (lastScrolledId === dataId) return;
+      if (isScrolling) return;
+
+      isScrolling = true;
+
+      try {
+        const success = await scrollToMark(dataId);
+        if (success !== false) {
+           lastScrolledId = dataId;
+        }
+      } finally {
+        isScrolling = false;
+      }
+    }, 100);
+  };
+
   const onMouseOut = (event) => {
-    event.target.closest('li').classList.remove('hover');
-  }
-  
+    event.target.closest('li')?.classList.remove('hover');
+  };
+
+  const onMouseLeave = (event) => {
+    lastScrolledId = null;
+  };
+
   /* MAIN */
   const result = await browser.storage.local.get(url);
   const markedTexts = result[url] || [];
@@ -300,6 +327,7 @@ const buildPopup = async (url, color, sortedIds) => {
     if (isMacOS()) {
       li.addEventListener('mouseover', onMouseOver);
       li.addEventListener('mouseout', onMouseOut);
+      li.addEventListener('mouseleave', onMouseLeave);
     }
     
     // Btn to delete the item
@@ -446,6 +474,7 @@ const buildPopup = async (url, color, sortedIds) => {
       if (tab?.id) {
         await browser.tabs.sendMessage(tab.id, { type: 'RESTORE_SCROLL' });
       }
+      lastScrolledId = null;
       restoreScrollPosition.style.display = 'none';
     } catch (error) {
       console.error('[ColorMarkExtension] Failed to restore scroll:', error);
