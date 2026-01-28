@@ -22,60 +22,16 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 3. Tap the icon next to the address bar and choose the extension. On macOS, you can also use the "ColorMark" command from the context menu.
 4. A window will slide up from the bottom on iPhone, while a pop-up window will appear on iPad and Mac. You can change the default highlight color, remove highlighted items, modify their colors, or share them using the Text Fragment API with the Share Sheet API. *For reference, the highlighted items appear in the same order as the text within the web page.*
 
-## Version History
+## Latest Version
 
-### 1.2.2 - 2025-11-07
+### [26.1] - 2026-01-28
 
-#### **Common**
+- Restored scroll position support, allowing an instant return to your previous location after navigating to a highlight.
+- Refined content layout to align seamlessly with the updated macOS 26 design language.
+- Transitioned to a new versioning scheme (v26.1) for better clarity and alignment with the current year.
+- Improved reliability of color syncing and UI interactions through optimized background handling.
 
-- Updated for the latest OS with new user interface and theme-optimized icons
-
-### 1.2.1 - 2025-04-11
-
-#### **Common**
-
-- Added support for synchronizing marks across tabs with the same URL
-- Added smooth scrolling for the marked content
-
-### 1.2 - 2025-03-05
-
-#### **Common**
-
-- Improved text matching accuracy, ensuring more precise highlight restoration when revisiting
-
-### 1.1.1
-
-#### **iOS/iPadOS** - 2025-02-24
-
-- Added support for dark mode icons
-- Improved localization by adjusting phrases in certain languages
-
-#### **macOS** - 2025-02-19
-
-- Improve text highlighting accuracy when selecting text across multiple tags
-- Fix app names and phrasing in certain languages for localization improvements
-
-### 1.1
-
-#### **iOS/iPadOS** - 2025-02-18
-
-- Fix the bug with link sharing to ensure consistent URL handling
-- Add support for all languages in the App Store
-
-#### **macOS** - 2025-02-09
-
-- Improve RTL text handling and resolved display issues
-- Add support for all languages in the App Store
-
-### 1.0
-
-#### **iOS/iPadOS** - 2025-02-15
-
-- Initial release with the same core features as the macOS version
-
-#### **macOS** - 2025-02-04
-
-- Initial release
+Previous Updates: [CHANGELOG.md](./CHANGELOG.md)
 
 ## Known Issues
 
@@ -97,8 +53,9 @@ You can reach me via [email](mailto:hkitago@icloud.com?subject=Support%20for%20C
 ## Additional Information
 
 ### Related Links
-
+- App Store: [ColorMark for Safari on the App Store](https://apps.apple.com/app/id6740665007)
 - [Get extensions to customize Safari on iPhone - Apple Support](https://support.apple.com/guide/iphone/iphab0432bf6/18.0/ios/18.0)
 - [Get extensions to customize Safari on Mac - Apple Support](https://support.apple.com/guide/safari/get-extensions-sfri32508/mac)
+- [Use Safari extensions on your Mac – Apple Support](https://support.apple.com/102343)
 - Privacy Policy Page: [Privacy Policy – hkitago software dev](https://hkitago.com/wpautoterms/privacy-policy/)
 - Support Page: [hkitago/ColorMark](https://github.com/hkitago/ColorMark/)
