@@ -1,6 +1,12 @@
 (() => {
   let savedScroll = null; // to restore scroll position
+  let isInitializingHighlights = false;
   const SCROLL_THRESHOLD = 5;
+  const DEFAULT_MARK_COLOR = '#fffb00';
+  const MARK_SCHEMA_VERSION = 3;
+  const CONTEXT_CHAR_LIMIT = 48;
+  const BIDI_CONTROL_REGEX = /[\u200E\u200F\u202A-\u202E]/g;
+  const BIDI_CONTROL_CHAR_REGEX = /[\u200E\u200F\u202A-\u202E]/u;
 
   const normalizeUrl = (url) => {
     try {
@@ -67,14 +73,6 @@
   };
   
   const serializeRange = (range) => {
-    const startContainer = range.startContainer;
-    const endContainer = range.endContainer;
-    const startOffset = range.startOffset;
-    const endOffset = range.endOffset;
-
-    const startParent = startContainer.parentNode;
-    const endParent = endContainer.parentNode;
-
     const fragment = range.cloneContents();
     const container = document.createElement('div');
     container.appendChild(fragment);
@@ -85,6 +83,296 @@
       text: normalizedText,
       html: container.innerHTML
     };
+  };
+
+  const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+
+  const normalizeTextForMatch = (text) => {
+    if (typeof text !== 'string') return '';
+
+    return text
+      .normalize('NFC')
+      .replace(BIDI_CONTROL_REGEX, '')
+      .replace(/[\s\u3000]+/g, ' ')
+      .trim();
+  };
+
+  const sliceFromEndByChars = (text, limit) => {
+    if (!text) return '';
+    const chars = Array.from(text);
+    return chars.slice(-limit).join('');
+  };
+
+  const sliceFromStartByChars = (text, limit) => {
+    if (!text) return '';
+    const chars = Array.from(text);
+    return chars.slice(0, limit).join('');
+  };
+
+  const collectTextNodesWithPositions = (root) => {
+    const walker = document.createTreeWalker(
+      root,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode: (node) => {
+          const parentTag = node.parentElement?.tagName;
+          if (parentTag && ['SCRIPT', 'STYLE', 'NOSCRIPT', 'TEMPLATE'].includes(parentTag)) {
+            return NodeFilter.FILTER_REJECT;
+          }
+          return node.textContent.length > 0
+            ? NodeFilter.FILTER_ACCEPT
+            : NodeFilter.FILTER_REJECT;
+        }
+      }
+    );
+
+    const nodeInfo = [];
+    const nodeMap = new Map();
+    let totalLength = 0;
+    let currentNode;
+
+    while ((currentNode = walker.nextNode())) {
+      const text = currentNode.textContent || '';
+      const info = {
+        node: currentNode,
+        start: totalLength,
+        length: text.length
+      };
+
+      nodeInfo.push(info);
+      nodeMap.set(currentNode, info);
+      totalLength += text.length;
+    }
+
+    return { nodeInfo, nodeMap, totalLength };
+  };
+
+  const buildNormalizedTextIndex = (nodeInfo) => {
+    let normalizedText = '';
+    const normalizedToOriginal = [];
+    let previousWasSpace = true;
+
+    nodeInfo.forEach((info) => {
+      const text = info.node.textContent || '';
+
+      for (let i = 0; i < text.length; i++) {
+        const originalChar = text[i];
+        const originalIndex = info.start + i;
+
+        if (BIDI_CONTROL_CHAR_REGEX.test(originalChar)) {
+          continue;
+        }
+
+        if (/[\s\u3000]/u.test(originalChar)) {
+          if (!previousWasSpace && normalizedText.length > 0) {
+            normalizedText += ' ';
+            normalizedToOriginal.push(originalIndex);
+            previousWasSpace = true;
+          }
+          continue;
+        }
+
+        const normalizedChar = originalChar.normalize('NFC');
+        const chars = Array.from(normalizedChar);
+        chars.forEach((char) => {
+          normalizedText += char;
+          normalizedToOriginal.push(originalIndex);
+        });
+        previousWasSpace = false;
+      }
+    });
+
+    while (normalizedText.endsWith(' ')) {
+      normalizedText = normalizedText.slice(0, -1);
+      normalizedToOriginal.pop();
+    }
+
+    return { normalizedText, normalizedToOriginal };
+  };
+
+  const buildTextIndex = (root) => {
+    const { nodeInfo, nodeMap, totalLength } = collectTextNodesWithPositions(root);
+    const { normalizedText, normalizedToOriginal } = buildNormalizedTextIndex(nodeInfo);
+
+    return {
+      nodeInfo,
+      nodeMap,
+      totalLength,
+      normalizedText,
+      normalizedToOriginal
+    };
+  };
+
+  const findNodesForRange = (nodeInfo, startPos, endPos) => {
+    const result = [];
+
+    for (const info of nodeInfo) {
+      const nodeStart = info.start;
+      const nodeEnd = info.start + info.length;
+
+      if (nodeStart < endPos && nodeEnd > startPos) {
+        result.push({
+          node: info.node,
+          startOffset: Math.max(0, startPos - nodeStart),
+          endOffset: Math.min(info.length, endPos - nodeStart)
+        });
+      }
+    }
+
+    return result;
+  };
+
+  const getNodeLength = (node) => {
+    if (!node) return 0;
+    if (node.nodeType === Node.TEXT_NODE) {
+      return node.textContent?.length || 0;
+    }
+    return node.childNodes?.length || 0;
+  };
+
+  const getGlobalOffset = (container, offset, textIndex) => {
+    if (container?.nodeType === Node.TEXT_NODE) {
+      const info = textIndex.nodeMap.get(container);
+      if (info) {
+        return info.start + clamp(offset, 0, info.length);
+      }
+    }
+
+    try {
+      const probeRange = document.createRange();
+      probeRange.selectNodeContents(document.body);
+      probeRange.setEnd(container, offset);
+      const fragment = probeRange.cloneContents();
+      const text = fragment.textContent || '';
+      return text.length;
+    } catch (error) {
+      return 0;
+    }
+  };
+
+  const getGlobalTextPosition = (range, textIndex) => {
+    const safeTotal = textIndex.totalLength > 0 ? textIndex.totalLength : 1;
+    let start = getGlobalOffset(range.startContainer, range.startOffset, textIndex);
+    let end = getGlobalOffset(range.endContainer, range.endOffset, textIndex);
+
+    if (end < start) {
+      [start, end] = [end, start];
+    }
+
+    return {
+      start,
+      end,
+      totalLength: textIndex.totalLength,
+      ratio: clamp(start / safeTotal, 0, 1)
+    };
+  };
+
+  const findExactMatches = (textIndex, searchText) => {
+    const normalizedSearchText = normalizeTextForMatch(searchText);
+    if (!normalizedSearchText) return [];
+
+    const matches = [];
+    let startIndex = 0;
+
+    while (true) {
+      const normalizedStart = textIndex.normalizedText.indexOf(normalizedSearchText, startIndex);
+      if (normalizedStart === -1) break;
+
+      const normalizedEnd = normalizedStart + normalizedSearchText.length - 1;
+      const start = textIndex.normalizedToOriginal[normalizedStart];
+      const end = textIndex.normalizedToOriginal[normalizedEnd];
+
+      if (typeof start === 'number' && typeof end === 'number') {
+        matches.push({
+          start,
+          end: end + 1,
+          normalizedStart,
+          normalizedEnd
+        });
+      }
+
+      startIndex = normalizedStart + 1;
+    }
+
+    return matches.map((match, exactIndex) => ({
+      ...match,
+      exactIndex
+    }));
+  };
+
+  const getXPath = (node) => {
+    if (!node) return '';
+
+    const segments = [];
+    let current = node;
+
+    while (current && current.nodeType !== Node.DOCUMENT_NODE) {
+      if (current.nodeType === Node.TEXT_NODE) {
+        const parent = current.parentNode;
+        if (!parent) break;
+
+        const textNodes = Array.from(parent.childNodes).filter(
+          child => child.nodeType === Node.TEXT_NODE
+        );
+        const index = textNodes.indexOf(current) + 1;
+        segments.unshift(`text()[${index}]`);
+        current = parent;
+        continue;
+      }
+
+      if (current.nodeType === Node.ELEMENT_NODE) {
+        const tagName = current.nodeName.toLowerCase();
+        const siblings = current.parentNode
+          ? Array.from(current.parentNode.children).filter(
+            sibling => sibling.nodeName === current.nodeName
+          )
+          : [current];
+        const index = siblings.indexOf(current) + 1;
+        segments.unshift(`${tagName}[${index}]`);
+      }
+
+      current = current.parentNode;
+    }
+
+    return segments.length > 0 ? `/${segments.join('/')}` : '';
+  };
+
+  const resolveXPath = (xpath) => {
+    if (!xpath) return null;
+
+    try {
+      return document.evaluate(
+        xpath,
+        document,
+        null,
+        XPathResult.FIRST_ORDERED_NODE_TYPE,
+        null
+      ).singleNodeValue;
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const createRangeFromDomAnchor = (domRange) => {
+    if (!domRange) return null;
+
+    const startNode = resolveXPath(domRange.startXPath);
+    const endNode = resolveXPath(domRange.endXPath);
+    if (!startNode || !endNode) return null;
+
+    const range = document.createRange();
+    const startOffset = clamp(domRange.startOffset || 0, 0, getNodeLength(startNode));
+    const endOffset = clamp(domRange.endOffset || 0, 0, getNodeLength(endNode));
+
+    try {
+      range.setStart(startNode, startOffset);
+      range.setEnd(endNode, endOffset);
+    } catch (error) {
+      return null;
+    }
+
+    if (range.collapsed) return null;
+    return range;
   };
 
   const highlightText = (range, color, id) => {
@@ -213,8 +501,15 @@
     const prevResult = getAdjacentTextNode(range.startContainer, range.startOffset, 'previous');
     const nextResult = getAdjacentTextNode(range.endContainer, range.endOffset, 'next');
 
-    const prefix = prevResult ? prevResult.text.trim() : '';
-    const suffix = nextResult ? nextResult.text.trim() : '';
+    const normalizedPrefix = prevResult
+      ? normalizeTextForMatch(prevResult.text)
+      : '';
+    const normalizedSuffix = nextResult
+      ? normalizeTextForMatch(nextResult.text)
+      : '';
+
+    const prefix = sliceFromEndByChars(normalizedPrefix, CONTEXT_CHAR_LIMIT);
+    const suffix = sliceFromStartByChars(normalizedSuffix, CONTEXT_CHAR_LIMIT);
 
     return { prefix, suffix };
   };
@@ -265,13 +560,22 @@
     return Math.abs(savedScroll.top - container.scrollTop) <= SCROLL_THRESHOLD;
   }
 
+  const unwrapColorMark = (mark) => {
+    const parent = mark?.parentNode;
+    if (!parent) return;
+
+    while (mark.firstChild) {
+      parent.insertBefore(mark.firstChild, mark);
+    }
+    parent.removeChild(mark);
+    parent.normalize();
+  };
+
   const removeAllColorMarks = () => {
     const markToRemoves = document.querySelectorAll('.colorMarkText');
 
     markToRemoves.forEach((mark) => {
-      const parent = mark.parentNode;
-      const textNode = document.createTextNode(mark.textContent);
-      parent.replaceChild(textNode, mark);
+      unwrapColorMark(mark);
     });
   };
   
@@ -337,11 +641,7 @@
       const marksToRemove = document.querySelectorAll(`mark[data-id="${request.id}"]`);
 
       marksToRemove.forEach((mark) => {
-        const parent = mark.parentNode;
-        if (parent) {
-          const textNode = document.createTextNode(mark.textContent);
-          parent.replaceChild(textNode, mark);
-        }
+        unwrapColorMark(mark);
       });
       
       return;
@@ -379,25 +679,76 @@
       const rawUrl = request.url ? request.url : window.location.href;
       const url = normalizeUrl(rawUrl);
 
-      const defaultColor = request.color ? request.color : getDefaultColor();
+      const defaultColor = request.color || DEFAULT_MARK_COLOR;
       const id = generateUUID();
-
       const { prefix, suffix } = getPrefixAndSuffix(range);
+      const textIndex = buildTextIndex(document.body);
+      const positionInfo = getGlobalTextPosition(range, textIndex);
+      const exactMatches = findExactMatches(textIndex, serialized.text);
+      const targetPosition = positionInfo.start;
+      let byExactIndex = -1;
+
+      if (exactMatches.length > 0) {
+        let closest = exactMatches[0];
+        let closestDistance = Math.abs(closest.start - targetPosition);
+
+        for (const candidate of exactMatches) {
+          const distance = Math.abs(candidate.start - targetPosition);
+          if (distance < closestDistance) {
+            closest = candidate;
+            closestDistance = distance;
+          }
+        }
+
+        byExactIndex = closest.exactIndex;
+      }
 
       const result = await browser.storage.local.get(url);
       const colorMarks = result[url] || [];
 
-      if (!colorMarks.some(mark => mark.text === serialized.text)) {
-        colorMarks.push({
-          id: id,
-          text: serialized.text,
-          html: serialized.html,
-          prefix: prefix,
-          suffix: suffix,
-          color: defaultColor,
-        });
-        await browser.storage.local.set({ [url]: colorMarks });
-      }
+      colorMarks.push({
+        version: MARK_SCHEMA_VERSION,
+        id,
+        url,
+        color: defaultColor,
+        createdAt: Date.now(),
+        locale: document.documentElement.lang || navigator.language,
+        text: serialized.text,
+        html: serialized.html,
+        prefix,
+        suffix,
+        target: {
+          normalization: {
+            unicode: 'NFC',
+            whitespace: 'collapse'
+          },
+          selectors: {
+            textQuote: {
+              exact: serialized.text,
+              prefix,
+              suffix
+            },
+            textPosition: {
+              start: positionInfo.start,
+              end: positionInfo.end,
+              totalLength: positionInfo.totalLength,
+              ratio: positionInfo.ratio
+            },
+            domRange: {
+              startXPath: getXPath(range.startContainer),
+              startOffset: range.startOffset,
+              endXPath: getXPath(range.endContainer),
+              endOffset: range.endOffset
+            },
+            occurrence: {
+              byExactIndex,
+              exactCountAtSave: exactMatches.length
+            }
+          }
+        }
+      });
+
+      await browser.storage.local.set({ [url]: colorMarks });
 
       highlightText(range, defaultColor, id);
       selection.removeAllRanges();
@@ -413,228 +764,277 @@
     }
   });
 
+  const getFiniteNumber = (value) => (
+    typeof value === 'number' && Number.isFinite(value)
+      ? value
+      : null
+  );
+
+  const getMarkSelectors = (mark) => {
+    const selectors = mark?.target?.selectors || {};
+    const quote = selectors.textQuote || {};
+    const position = selectors.textPosition || {};
+
+    return {
+      textQuote: {
+        exact: quote.exact || mark.text || '',
+        prefix: quote.prefix || mark.prefix || '',
+        suffix: quote.suffix || mark.suffix || ''
+      },
+      textPosition: {
+        start: getFiniteNumber(position.start),
+        end: getFiniteNumber(position.end),
+        totalLength: getFiniteNumber(position.totalLength),
+        ratio: getFiniteNumber(position.ratio) ?? getFiniteNumber(mark.positionRatio)
+      },
+      domRange: selectors.domRange || mark.domAnchor || null,
+      occurrence: selectors.occurrence || {}
+    };
+  };
+
+  const createRangeSignature = (start, end) => `${start}:${end}`;
+
+  const hasColorMarkAncestor = (node) => {
+    let current = node?.parentNode;
+
+    while (current) {
+      if (
+        current.nodeType === Node.ELEMENT_NODE &&
+        current.classList?.contains('colorMarkText')
+      ) {
+        return true;
+      }
+      current = current.parentNode;
+    }
+
+    return false;
+  };
+
+  const applyHighlightToNodeRanges = (nodeRanges, mark) => {
+    if (!mark.id) {
+      mark.id = generateUUID();
+    }
+    if (!mark.color) {
+      mark.color = DEFAULT_MARK_COLOR;
+    }
+
+    let applied = false;
+
+    // Reverse-order wrapping avoids offset shifts when selection spans nested tags.
+    for (let i = nodeRanges.length - 1; i >= 0; i--) {
+      const { node, startOffset, endOffset } = nodeRanges[i];
+      if (!node || !node.parentNode) continue;
+      if (endOffset <= startOffset) continue;
+      if (hasColorMarkAncestor(node)) continue;
+
+      const range = document.createRange();
+      try {
+        range.setStart(node, clamp(startOffset, 0, node.length));
+        range.setEnd(node, clamp(endOffset, 0, node.length));
+      } catch (error) {
+        continue;
+      }
+
+      if (range.collapsed) continue;
+
+      const wrapper = createMarkElement(mark.color, mark.id);
+      const fragment = range.extractContents();
+      if (!fragment.textContent) continue;
+
+      wrapper.appendChild(fragment);
+      range.insertNode(wrapper);
+      applied = true;
+    }
+
+    return applied;
+  };
+
+  const applyHighlightByOffsets = (textIndex, start, end, mark) => {
+    if (!Number.isFinite(start) || !Number.isFinite(end)) return false;
+    if (end <= start) return false;
+
+    const nodeRanges = findNodesForRange(textIndex.nodeInfo, start, end);
+    if (nodeRanges.length === 0) return false;
+
+    return applyHighlightToNodeRanges(nodeRanges, mark);
+  };
+
+  const doesRangeMatchExact = (range, exactText) => {
+    const normalizedExact = normalizeTextForMatch(exactText);
+    if (!normalizedExact) return true;
+
+    const serialized = serializeRange(range);
+    const rangeText = normalizeTextForMatch(serialized.text);
+    return rangeText === normalizedExact;
+  };
+
+  const getContextScore = (textIndex, candidate, normalizedPrefix, normalizedSuffix) => {
+    let score = 0;
+
+    if (normalizedPrefix) {
+      const prefixStart = Math.max(0, candidate.normalizedStart - normalizedPrefix.length);
+      const actualPrefix = textIndex.normalizedText.slice(prefixStart, candidate.normalizedStart);
+      if (actualPrefix === normalizedPrefix) {
+        score += 2;
+      }
+    }
+
+    if (normalizedSuffix) {
+      const suffixStart = candidate.normalizedEnd + 1;
+      const actualSuffix = textIndex.normalizedText.slice(
+        suffixStart,
+        suffixStart + normalizedSuffix.length
+      );
+      if (actualSuffix === normalizedSuffix) {
+        score += 2;
+      }
+    }
+
+    return score;
+  };
+
+  const chooseBestMatch = (matches, textIndex, selectors, usedRangeSignatures) => {
+    const normalizedPrefix = normalizeTextForMatch(selectors.textQuote.prefix);
+    const normalizedSuffix = normalizeTextForMatch(selectors.textQuote.suffix);
+    const rawOccurrence = selectors.occurrence?.byExactIndex;
+    const targetOccurrence = Number.isInteger(rawOccurrence) && rawOccurrence >= 0
+      ? rawOccurrence
+      : null;
+    const targetStart = selectors.textPosition.start;
+
+    let targetRatio = selectors.textPosition.ratio;
+    if (targetRatio === null && targetStart !== null && textIndex.totalLength > 0) {
+      targetRatio = clamp(targetStart / textIndex.totalLength, 0, 1);
+    }
+
+    const ranked = matches
+      .filter(candidate => !usedRangeSignatures.has(createRangeSignature(candidate.start, candidate.end)))
+      .map((candidate) => {
+        const candidateRatio = textIndex.totalLength > 0
+          ? candidate.start / textIndex.totalLength
+          : 0;
+
+        return {
+          ...candidate,
+          contextScore: getContextScore(textIndex, candidate, normalizedPrefix, normalizedSuffix),
+          occurrenceDistance: targetOccurrence === null
+            ? Number.POSITIVE_INFINITY
+            : Math.abs(candidate.exactIndex - targetOccurrence),
+          ratioDistance: targetRatio === null
+            ? Number.POSITIVE_INFINITY
+            : Math.abs(candidateRatio - targetRatio),
+          startDistance: targetStart === null
+            ? Number.POSITIVE_INFINITY
+            : Math.abs(candidate.start - targetStart)
+        };
+      });
+
+    if (ranked.length === 0) {
+      return null;
+    }
+
+    ranked.sort((a, b) => {
+      if (a.contextScore !== b.contextScore) {
+        return b.contextScore - a.contextScore;
+      }
+      if (a.occurrenceDistance !== b.occurrenceDistance) {
+        return a.occurrenceDistance - b.occurrenceDistance;
+      }
+      if (a.ratioDistance !== b.ratioDistance) {
+        return a.ratioDistance - b.ratioDistance;
+      }
+      if (a.startDistance !== b.startDistance) {
+        return a.startDistance - b.startDistance;
+      }
+      return a.start - b.start;
+    });
+
+    return ranked[0];
+  };
+
+  const applyHighlightMark = (mark, usedRangeSignatures) => {
+    const selectors = getMarkSelectors(mark);
+    const exactText = selectors.textQuote.exact || mark.text || '';
+    if (!exactText) return false;
+
+    const textIndex = buildTextIndex(document.body);
+
+    const anchoredRange = createRangeFromDomAnchor(selectors.domRange);
+    if (anchoredRange && doesRangeMatchExact(anchoredRange, exactText)) {
+      const anchoredPosition = getGlobalTextPosition(anchoredRange, textIndex);
+      const anchoredSignature = createRangeSignature(anchoredPosition.start, anchoredPosition.end);
+
+      if (!usedRangeSignatures.has(anchoredSignature)) {
+        const applied = applyHighlightByOffsets(
+          textIndex,
+          anchoredPosition.start,
+          anchoredPosition.end,
+          mark
+        );
+
+        if (applied) {
+          usedRangeSignatures.add(anchoredSignature);
+          return true;
+        }
+      }
+    }
+
+    const exactMatches = findExactMatches(textIndex, exactText);
+    if (exactMatches.length === 0) return false;
+
+    const bestMatch = chooseBestMatch(exactMatches, textIndex, selectors, usedRangeSignatures);
+    if (!bestMatch) return false;
+
+    const applied = applyHighlightByOffsets(textIndex, bestMatch.start, bestMatch.end, mark);
+    if (applied) {
+      usedRangeSignatures.add(createRangeSignature(bestMatch.start, bestMatch.end));
+    }
+
+    return applied;
+  };
+
+  const getMarkSortRatio = (mark) => {
+    const selectors = getMarkSelectors(mark);
+    if (selectors.textPosition.ratio !== null) {
+      return selectors.textPosition.ratio;
+    }
+    if (selectors.textPosition.start !== null && selectors.textPosition.totalLength) {
+      return clamp(selectors.textPosition.start / selectors.textPosition.totalLength, 0, 1);
+    }
+    return Number.POSITIVE_INFINITY;
+  };
+
   const initializeContent = async () => {
+    if (isInitializingHighlights) return;
+
+    isInitializingHighlights = true;
     try {
       const url = normalizeUrl(window.location.href);
       const result = await browser.storage.local.get(url);
       const colorMarks = result[url] || [];
-
       if (colorMarks.length === 0) return;
 
-      const applyHighlightMark = (mark) => {
-        const collectTextNodesWithPositions = (root) => {
-          const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-          const nodeInfo = [];
-          let totalLength = 0;
-          let currentNode;
-          
-          while ((currentNode = walker.nextNode())) {
-            const nodeText = currentNode.textContent;
-            if (nodeText.trim()) {
-              nodeInfo.push({
-                node: currentNode,
-                start: totalLength,
-                length: nodeText.length
-              });
-              totalLength += nodeText.length;
-            }
-          }
-          
-          return nodeInfo;
-        };
+      const usedRangeSignatures = new Set();
+      const sortedMarks = [...colorMarks].sort((a, b) => {
+        const ratioA = getMarkSortRatio(a);
+        const ratioB = getMarkSortRatio(b);
 
-        const findNodesForRange = (nodeInfo, startPos, endPos) => {
-          const result = [];
-          
-          for (const info of nodeInfo) {
-            const nodeStart = info.start;
-            const nodeEnd = info.start + info.length;
-            
-            if (nodeStart < endPos && nodeEnd > startPos) {
-              result.push({
-                node: info.node,
-                startOffset: Math.max(0, startPos - nodeStart),
-                endOffset: Math.min(info.length, endPos - nodeStart)
-              });
-            }
-          }
-          
-          return result;
-        };
-
-        const findMatches = (nodeInfo, searchText) => {
-          const mapping = [];
-          let fullText = '';
-          let fullTextIndex = 0;
-          
-          nodeInfo.forEach(info => {
-            const text = info.node.textContent;
-            const normalizedText = text
-              .replace(/[\s\u3000]+/g, ' ')
-              .replace(/\u200F/g, '')
-              .trim();
-            
-            if (fullText) {
-              mapping.push({
-                originalIndex: info.start,
-                normalizedIndex: fullTextIndex
-              });
-              fullText += ' ';
-              fullTextIndex += 1;
-            }
-            
-            for (let i = 0; i < normalizedText.length; i++) {
-              mapping.push({
-                originalIndex: info.start + i,
-                normalizedIndex: fullTextIndex + i
-              });
-            }
-            
-            fullText += normalizedText;
-            fullTextIndex += normalizedText.length;
-          });
-          
-          const normalizedSearchText = searchText
-            .replace(/[\s\u3000]+/g, ' ')
-            .replace(/\u200F/g, '')
-            .trim();
-          
-          const matches = [];
-          let startIndex = 0;
-          
-          while (true) {
-            const index = fullText.indexOf(normalizedSearchText, startIndex);
-            if (index === -1) break;
-            
-            const startMapping = mapping.find(m => m.normalizedIndex === index);
-            const endMapping = mapping.find(m => m.normalizedIndex === index + normalizedSearchText.length - 1);
-            
-            if (startMapping && endMapping) {
-              matches.push({
-                start: startMapping.originalIndex,
-                end: endMapping.originalIndex + 1
-              });
-            }
-            
-            startIndex = index + 1;
-          }
-          
-          return matches;
-        };
-
-        const matchWithPrefixSuffix = (nodeInfo, mark) => {
-          let start = 0;
-          let ends = [];
-
-          nodeInfo.forEach(({ node, start: nodeStart }, index) => {
-            const nodeText = node.textContent.replace(/\s+/g, ' ').trim();
-
-            const prefixStart = nodeText.indexOf(mark.prefix);
-            if (prefixStart !== -1) {
-              const prefixEnd = prefixStart + mark.prefix.length;
-              
-              const nodeTextWithoutPrefix = nodeText.replace(mark.prefix, '');
-              const isPrefixAndTextMixed = nodeTextWithoutPrefix !== '' && mark.text.startsWith(nodeTextWithoutPrefix);
-
-              if (isPrefixAndTextMixed) {
-                start = nodeStart + prefixEnd;
-              } else if (index + 1 < nodeInfo.length) {
-                const nextNodeInfo = nodeInfo[index + 1];
-                const nextNodeText = nextNodeInfo.node.textContent.replace(/\s+/g, ' ').trim();
-                
-                if (mark.text.startsWith(nextNodeText)) {
-                  start = nextNodeInfo.start + prefixStart;
-                }
-              }
-            }
-
-            if (start > 0) {
-              const suffixStart = nodeText.indexOf(mark.suffix);
-              if (suffixStart !== -1) {
-                if (mark.suffix !== '' && nodeText.includes(mark.suffix)) {
-                  ends.push(nodeStart + suffixStart);
-                } else {
-                  if (index > 0) {
-                    const prevNodeInfo = nodeInfo[index - 1];
-                    const prevNodeText = prevNodeInfo.node.textContent.replace(/\s+/g, ' ').trim();
-                    if (mark.text.endsWith(prevNodeText)) {
-                      ends.push(nodeStart + suffixStart);
-                    }
-                  }
-                }
-              }
-            }
-          });
-
-          if (start === 0 || ends.length === 0) return [];
-
-          const validEnds = ends.filter(end => end > start);
-          const end = validEnds.length > 0 ? Math.min(...validEnds) : null;
-
-          return end !== null ? [{ start, end }] : [];
-        };
-        
-        const isRangeAlreadyHighlighted = (range) => {
-          const startNode = range.startContainer;
-          const endNode = range.endContainer;
-
-          if (startNode === endNode) {
-            return startNode.parentNode && startNode.parentNode.tagName === 'MARK';
-          }
-
-          let currentNode = startNode;
-          while (currentNode !== endNode) {
-            if (currentNode.nodeType === 1 && currentNode.tagName === 'MARK') {
-              return true;
-            }
-            currentNode = currentNode.nextSibling || currentNode.parentNode;
-          }
-
-          return false;
-        };
-
-        const applyHighlight = (nodeRanges, mark) => {
-          for (let i = nodeRanges.length - 1; i >= 0; i--) {
-            const { node, startOffset, endOffset } = nodeRanges[i];
-            const range = document.createRange();
-            range.setStart(node, startOffset);
-            range.setEnd(node, endOffset);
-            
-            if (isRangeAlreadyHighlighted(range)) {
-              continue;
-            }
-            
-            const wrapper = createMarkElement(mark.color, mark.id);
-            const fragment = range.extractContents();
-            wrapper.appendChild(fragment);
-            range.insertNode(wrapper);
-          }
-          
-          return true;
-        };
-
-        const nodeInfo = collectTextNodesWithPositions(document.body);
-        let matches = matchWithPrefixSuffix(nodeInfo, mark);
-        
-        if (matches.length === 0) {
-          matches = findMatches(nodeInfo, mark.text);
+        if (ratioA !== ratioB) {
+          return ratioA - ratioB;
         }
-        
-        if (matches.length > 0) {
-          const match = matches[0];
-          const nodeRanges = findNodesForRange(nodeInfo, match.start, match.end);
 
-          if (nodeRanges.length > 0) {
-            applyHighlight(nodeRanges, mark);
-          }
-        }
-      };
+        const createdAtA = getFiniteNumber(a.createdAt) || 0;
+        const createdAtB = getFiniteNumber(b.createdAt) || 0;
+        return createdAtA - createdAtB;
+      });
 
-      for (const mark of colorMarks) {
-        applyHighlightMark(mark);
+      for (const mark of sortedMarks) {
+        applyHighlightMark(mark, usedRangeSignatures);
       }
     } catch (error) {
       console.error('[ColorMarkExtension] Failed to initialize highlights:', error);
+    } finally {
+      isInitializingHighlights = false;
     }
   };
 
