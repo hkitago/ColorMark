@@ -20,6 +20,89 @@
     }
   };
 
+  const getStorageIndexKey = (url) => `colorMarks:index:${url}`;
+  const getStorageItemKey = (url, id) => `colorMarks:item:${url}:${id}`;
+
+  const normalizeStoredMark = (mark, url) => ({
+    ...mark,
+    id: mark?.id || generateUUID(),
+    url: mark?.url || url,
+    color: mark?.color || DEFAULT_MARK_COLOR
+  });
+
+  const loadColorMarksForUrl = async (url) => {
+    const indexKey = getStorageIndexKey(url);
+    const result = await browser.storage.local.get([indexKey, url]);
+    const index = result[indexKey];
+
+    if (index && Array.isArray(index.ids)) {
+      const ids = [...new Set(index.ids.filter(Boolean))];
+      if (ids.length === 0) {
+        return [];
+      }
+
+      const itemKeys = ids.map(id => getStorageItemKey(url, id));
+      const itemResult = await browser.storage.local.get(itemKeys);
+      const marks = ids
+        .map(id => itemResult[getStorageItemKey(url, id)])
+        .filter(Boolean)
+        .map(mark => normalizeStoredMark(mark, url));
+
+      if (marks.length !== ids.length) {
+        const repairedIds = marks.map(mark => mark.id);
+        await browser.storage.local.set({
+          [indexKey]: {
+            rev: (index.rev || 0) + 1,
+            ids: repairedIds
+          }
+        });
+      }
+
+      return marks;
+    }
+
+    const legacyMarks = Array.isArray(result[url]) ? result[url] : [];
+    if (legacyMarks.length === 0) {
+      return [];
+    }
+
+    const normalizedMarks = legacyMarks.map(mark => normalizeStoredMark(mark, url));
+    const payload = {
+      [indexKey]: {
+        rev: 1,
+        ids: normalizedMarks.map(mark => mark.id)
+      }
+    };
+
+    normalizedMarks.forEach((mark) => {
+      payload[getStorageItemKey(url, mark.id)] = mark;
+    });
+
+    await browser.storage.local.set(payload);
+    await browser.storage.local.remove(url);
+
+    return normalizedMarks;
+  };
+
+  const appendColorMark = async (url, mark) => {
+    const indexKey = getStorageIndexKey(url);
+    const current = await browser.storage.local.get(indexKey);
+    const index = current[indexKey] || { rev: 0, ids: [] };
+    const ids = Array.isArray(index.ids) ? [...index.ids] : [];
+
+    if (!ids.includes(mark.id)) {
+      ids.push(mark.id);
+    }
+
+    await browser.storage.local.set({
+      [getStorageItemKey(url, mark.id)]: mark,
+      [indexKey]: {
+        rev: (index.rev || 0) + 1,
+        ids
+      }
+    });
+  };
+
   const generateUUID = () => {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
       const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
@@ -713,10 +796,9 @@
         byExactIndex = closest.exactIndex;
       }
 
-      const result = await browser.storage.local.get(url);
-      const colorMarks = result[url] || [];
+      await loadColorMarksForUrl(url);
 
-      colorMarks.push({
+      const newMark = {
         version: MARK_SCHEMA_VERSION,
         id,
         url,
@@ -756,9 +838,9 @@
             }
           }
         }
-      });
+      };
 
-      await browser.storage.local.set({ [url]: colorMarks });
+      await appendColorMark(url, newMark);
 
       highlightText(range, defaultColor, id);
       selection.removeAllRanges();
@@ -1026,8 +1108,7 @@
     isInitializingHighlights = true;
     try {
       const url = normalizeUrl(window.location.href);
-      const result = await browser.storage.local.get(url);
-      const colorMarks = result[url] || [];
+      const colorMarks = await loadColorMarksForUrl(url);
       if (colorMarks.length === 0) return;
 
       const usedRangeSignatures = new Set();
