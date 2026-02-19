@@ -1,6 +1,7 @@
 (() => {
   let savedScroll = null; // to restore scroll position
   let isInitializingHighlights = false;
+  let initializeTimer = null;
   const SCROLL_THRESHOLD = 5;
   const DEFAULT_MARK_COLOR = '#fffb00';
   const MARK_SCHEMA_VERSION = 3;
@@ -33,6 +34,15 @@
     return Array.from(colorMarkElements)
       .map(node => node.getAttribute('data-id'))
       .filter((id, index, array) => array.indexOf(id) === index);
+  };
+
+  const getAppliedMarkIdSet = () => {
+    const nodes = document.querySelectorAll('.colorMarkText[data-id]');
+    return new Set(
+      Array.from(nodes)
+        .map(node => node.getAttribute('data-id'))
+        .filter(Boolean)
+    );
   };
   
   const getTextColorForBackground = (backgroundColor) => {
@@ -952,12 +962,10 @@
     return ranked[0];
   };
 
-  const applyHighlightMark = (mark, usedRangeSignatures) => {
+  const applyHighlightMark = (mark, usedRangeSignatures, textIndex, exactMatchCache) => {
     const selectors = getMarkSelectors(mark);
     const exactText = selectors.textQuote.exact || mark.text || '';
     if (!exactText) return false;
-
-    const textIndex = buildTextIndex(document.body);
 
     const anchoredRange = createRangeFromDomAnchor(selectors.domRange);
     if (anchoredRange && doesRangeMatchExact(anchoredRange, exactText)) {
@@ -979,7 +987,15 @@
       }
     }
 
-    const exactMatches = findExactMatches(textIndex, exactText);
+    const normalizedExact = normalizeTextForMatch(exactText);
+    if (!normalizedExact) return false;
+
+    let exactMatches = exactMatchCache.get(normalizedExact);
+    if (!exactMatches) {
+      exactMatches = findExactMatches(textIndex, exactText);
+      exactMatchCache.set(normalizedExact, exactMatches);
+    }
+
     if (exactMatches.length === 0) return false;
 
     const bestMatch = chooseBestMatch(exactMatches, textIndex, selectors, usedRangeSignatures);
@@ -1015,6 +1031,9 @@
       if (colorMarks.length === 0) return;
 
       const usedRangeSignatures = new Set();
+      const appliedMarkIds = getAppliedMarkIdSet();
+      const textIndex = buildTextIndex(document.body);
+      const exactMatchCache = new Map();
       const sortedMarks = [...colorMarks].sort((a, b) => {
         const ratioA = getMarkSortRatio(a);
         const ratioB = getMarkSortRatio(b);
@@ -1029,7 +1048,8 @@
       });
 
       for (const mark of sortedMarks) {
-        applyHighlightMark(mark, usedRangeSignatures);
+        if (mark?.id && appliedMarkIds.has(mark.id)) continue;
+        applyHighlightMark(mark, usedRangeSignatures, textIndex, exactMatchCache);
       }
     } catch (error) {
       console.error('[ColorMarkExtension] Failed to initialize highlights:', error);
@@ -1038,12 +1058,40 @@
     }
   };
 
-  const observer = new MutationObserver((mutationsList) => {
-    for (let mutation of mutationsList) {
-      if (mutation.type === 'childList') {
-        initializeContent();
+  const hasNonExtensionMutations = (mutationsList) => mutationsList.some((mutation) => {
+    if (mutation.type !== 'childList') return false;
+
+    const nodes = [...mutation.addedNodes, ...mutation.removedNodes];
+    return nodes.some((node) => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        return !node.parentElement?.closest('.colorMarkText');
       }
+      if (node.nodeType !== Node.ELEMENT_NODE) {
+        return false;
+      }
+      if (node.classList?.contains('colorMarkText')) {
+        return false;
+      }
+      return !node.closest('.colorMarkText');
+    });
+  });
+
+  const scheduleInitializeContent = () => {
+    if (initializeTimer) {
+      clearTimeout(initializeTimer);
     }
+
+    initializeTimer = setTimeout(() => {
+      initializeTimer = null;
+      initializeContent();
+    }, 120);
+  };
+
+  const observer = new MutationObserver((mutationsList) => {
+    if (!hasNonExtensionMutations(mutationsList)) {
+      return;
+    }
+    scheduleInitializeContent();
   });
 
   observer.observe(document.body, { childList: true, subtree: true });
