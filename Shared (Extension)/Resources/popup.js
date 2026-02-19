@@ -97,11 +97,17 @@ const constructFragmentUrl = (tabUrl, markedText) => {
     }
   }
 
+  const selectorPrefix = markedText?.target?.selectors?.textQuote?.prefix || '';
+  const selectorSuffix = markedText?.target?.selectors?.textQuote?.suffix || '';
+  const contextPrefix = markedText.prefix || selectorPrefix;
+  const contextSuffix = markedText.suffix || selectorSuffix;
+  const hasContext = Boolean(contextPrefix || contextSuffix);
+
   let params = '';
-  if (markedText.isDuplicate || isBlockElement(markedText.html)) {
-    params = (markedText.prefix ? `${encodeURIComponent(markedText.prefix)}-,` : '') +
+  if (hasContext || isBlockElement(markedText.html)) {
+    params = (contextPrefix ? `${encodeURIComponent(contextPrefix)}-,` : '') +
              `${fragmentParam}` +
-             (markedText.suffix ? `,-${encodeURIComponent(markedText.suffix)}` : '');
+             (contextSuffix ? `,-${encodeURIComponent(contextSuffix)}` : '');
   } else {
     params = `${fragmentParam}`;
   }
