@@ -12,24 +12,137 @@ const normalizeUrl = (url) => {
   }
 };
 
+const getStorageIndexKey = (url) => `colorMarks:index:${url}`;
+const getStorageItemKey = (url, id) => `colorMarks:item:${url}:${id}`;
+const generateUUID = () => {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
+
+const normalizeStoredMark = (mark, url) => ({
+  ...mark,
+  id: mark?.id || generateUUID(),
+  url: mark?.url || url
+});
+
+const loadColorMarksForUrl = async (url) => {
+  const indexKey = getStorageIndexKey(url);
+  const result = await browser.storage.local.get([indexKey, url]);
+  const index = result[indexKey];
+
+  if (index && Array.isArray(index.ids)) {
+    const ids = [...new Set(index.ids.filter(Boolean))];
+    if (ids.length === 0) {
+      return [];
+    }
+
+    const itemKeys = ids.map(id => getStorageItemKey(url, id));
+    const itemResult = await browser.storage.local.get(itemKeys);
+    const marks = ids
+      .map(id => itemResult[getStorageItemKey(url, id)])
+      .filter(Boolean)
+      .map(mark => normalizeStoredMark(mark, url));
+
+    if (marks.length !== ids.length) {
+      await browser.storage.local.set({
+        [indexKey]: {
+          rev: (index.rev || 0) + 1,
+          ids: marks.map(mark => mark.id)
+        }
+      });
+    }
+
+    return marks;
+  }
+
+  const legacyMarks = Array.isArray(result[url]) ? result[url] : [];
+  if (legacyMarks.length === 0) {
+    return [];
+  }
+
+  const normalizedMarks = legacyMarks.map(mark => normalizeStoredMark(mark, url));
+  const payload = {
+    [indexKey]: {
+      rev: 1,
+      ids: normalizedMarks.map(mark => mark.id)
+    }
+  };
+
+  normalizedMarks.forEach((mark) => {
+    payload[getStorageItemKey(url, mark.id)] = mark;
+  });
+
+  await browser.storage.local.set(payload);
+  await browser.storage.local.remove(url);
+
+  return normalizedMarks;
+};
+
+const removeStoredMarkById = async (url, id) => {
+  const indexKey = getStorageIndexKey(url);
+  const current = await browser.storage.local.get(indexKey);
+  const index = current[indexKey];
+
+  if (!index || !Array.isArray(index.ids)) {
+    return;
+  }
+
+  const updatedIds = index.ids.filter(markId => markId !== id);
+  const removeKeys = [getStorageItemKey(url, id)];
+
+  if (updatedIds.length === 0) {
+    removeKeys.push(indexKey, url);
+    await browser.storage.local.remove(removeKeys);
+    return;
+  }
+
+  await browser.storage.local.remove(removeKeys);
+  await browser.storage.local.set({
+    [indexKey]: {
+      rev: (index.rev || 0) + 1,
+      ids: updatedIds
+    }
+  });
+};
+
+const clearStoredMarks = async (url) => {
+  const indexKey = getStorageIndexKey(url);
+  const current = await browser.storage.local.get([indexKey, url]);
+  const index = current[indexKey];
+  const removeKeys = [indexKey, url];
+
+  if (index && Array.isArray(index.ids)) {
+    index.ids.forEach((id) => {
+      removeKeys.push(getStorageItemKey(url, id));
+    });
+  }
+
+  await browser.storage.local.remove(removeKeys);
+};
+
 const updateMarkedColor = async (newColor, id, url) => {
   if (!isValidHexColor(newColor) || !id || !url) return { success: false, reason: 'invalid-argument' };
 
   try {
-    const result = await browser.storage.local.get(url);
-    const markedTexts = result[url] || [];
+    const marks = await loadColorMarksForUrl(url);
+    const targetMark = marks.find(mark => mark.id === id);
+    if (!targetMark) {
+      return { success: false, reason: 'not-found' };
+    }
 
-    const updatedMarkedTexts = markedTexts.map(item => {
-      if (item.id === id) {
-        return {
-          ...item,
-          color: newColor
-        };
-      }
-      return item;
-    });
+    const updatedMark = {
+      ...targetMark,
+      color: newColor
+    };
 
-    await browser.storage.local.set({ [url]: updatedMarkedTexts });
+    await browser.storage.local.set({ [getStorageItemKey(url, id)]: updatedMark });
     return { success: true };
   } catch (error) {
     console.error('[ColorMarkExtension] Failed to update the marked color to storage:', error);
@@ -307,8 +420,7 @@ const buildPopup = async (url, color, sortedIds) => {
   };
 
   /* MAIN */
-  const result = await browser.storage.local.get(url);
-  const markedTexts = result[url] || [];
+  const markedTexts = await loadColorMarksForUrl(url);
   
   let sortedMarks = sortedIds.map(id => markedTexts.find(mark => mark.id === id));
   
@@ -351,10 +463,11 @@ const buildPopup = async (url, color, sortedIds) => {
       
       const ul = document.getElementById('colorMarkList');
       if (ul.children.length === 0) {
-        await browser.storage.local.remove(url);
+        await clearStoredMarks(url);
         showOnError(ul, clearAllMarks, restoreScrollPosition);
       } else {
-        await browser.storage.local.set({ [url]: updatedTexts });
+        await removeStoredMarkById(url, id);
+        sortedMarks = updatedTexts;
         
         if (ul.children.length === 1) {
           clearAllMarks.style.display = 'none';
@@ -446,7 +559,7 @@ const buildPopup = async (url, color, sortedIds) => {
   clearAllMarks.title = getCurrentLangLabelString('clearAllMarks');
   clearAllMarks.addEventListener('click', async () => {
     try {
-      await browser.storage.local.remove(url);
+      await clearStoredMarks(url);
       showOnError(ul, clearAllMarks, restoreScrollPosition);
       
       const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
