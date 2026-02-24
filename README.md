@@ -30,7 +30,7 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 ### [26.2] - 2026-02-20
 
 - Resolved highlight loss caused by overlapping text selections, keeping your annotations reliably saved
-- Optimized drawing and response speed to deliver a faster, more fluid experience.
+- Optimized drawing and response speed to deliver a faster, more fluid experience
 
 Previous Updates: [CHANGELOG.md](./CHANGELOG.md)
 
