@@ -1,8 +1,8 @@
 # <img src="https://raw.githubusercontent.com/hkitago/ColorMark/refs/heads/main/Shared%20(App)/Resources/Icon.png" height="36" valign="bottom"/> ColorMark for Safari Extension
 
-This Safari extension lets you highlight any text on web pages using various colors with your device's standard color picker. It's easy to mark important content and share direct links to your highlighted sections for quick reference. Your highlights will stay saved until you remove them manually or the webpage content changes, so they're always ready when you return. With modern sharing capabilities, highlighting and sharing text has never been easier, helping others quickly find and understand key information.
+This Safari extension lets you highlight text on web pages using your device’s built-in color picker, making it easy to mark important information as you browse. Highlights are reliably saved and restored when you reload a page or return to it later, so your notes remain available over time. When reading long pages with lots of scrolling, you can open a list of saved highlights and automatically scroll directly to their positions on the page, helping you review key sections quickly and comfortably.
 
-Perfect for educators, students, researchers, and presenters working with web content. Whether you're preparing study materials, sharing research findings, or creating engaging presentations, this extension helps you organize and share your ideas clearly and effectively.
+Ideal for people who read and reference web content regularly, including students creating study notes, researchers tracking sources across long pages, educators preparing materials, and presenters who need to locate key points quickly. It fits naturally into workflows where the web is used as a working space, keeping highlights in place and bringing you back to them when you need them.
 
 ## Installation & Uninstallation
 
@@ -17,25 +17,22 @@ To uninstall the extension, similarly to the installation process, toggle the ex
 
 ## Usage
 
-1. Load a web page. It is recommended to use the webpage with a stable and permanent URL. Dynamic pages or frequently changing content may affect the functionality of text fragments and may prevent highlights from being restored upon revisiting the page.
+1. Load a web page.
 2. Select the text on the web page.
 3. Tap the icon next to the address bar and choose the extension. On macOS, you can also use the "ColorMark" command from the context menu.
 4. A window will slide up from the bottom on iPhone, while a pop-up window will appear on iPad and Mac. You can change the default highlight color, remove highlighted items, modify their colors, or share them using the Text Fragment API with the Share Sheet API. *For reference, the highlighted items appear in the same order as the text within the web page.*
 
+> [!IMPORTANT]
+> For best results, use webpages with stable and permanent URLs. Dynamic pages or frequently changing content may affect web annotation and text fragment behavior, and highlights may not be restored correctly when revisiting the page.
+
 ## Latest Version
 
-### [26.1] - 2026-01-28
+### [26.2] - 2026-02-20
 
-- Restored scroll position support, allowing an instant return to your previous location after navigating to a highlight.
-- Refined content layout to align seamlessly with the updated macOS 26 design language.
-- Transitioned to a new versioning scheme (v26.1) for better clarity and alignment with the current year.
-- Improved reliability of color syncing and UI interactions through optimized background handling.
+- Resolved highlight loss caused by overlapping text selections, keeping your annotations reliably saved
+- Optimized drawing and response speed to deliver a faster, more fluid experience.
 
 Previous Updates: [CHANGELOG.md](./CHANGELOG.md)
-
-## Known Issues
-
-- Improved accuracy of highlight restoration and reducing false matches, but issues may still occur on mobile sites.
 
 ## Compatibility
 

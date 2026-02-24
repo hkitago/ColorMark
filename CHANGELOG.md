@@ -1,5 +1,12 @@
 # Changelog
 
+## [26.1] - 2026-01-28
+
+- Restored scroll position support, allowing an instant return to your previous location after navigating to a highlight
+- Refined content layout to align seamlessly with the updated macOS 26 design language
+- Transitioned to a new versioning scheme (v26.1) for better clarity and alignment with the current year
+- Improved reliability of color syncing and UI interactions through optimized background handling
+
 ## [1.2.2] - 2025-11-07
 
 - Updated for the latest OS with new user interface and theme-optimized icons
